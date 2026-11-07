@@ -1,0 +1,66 @@
+name: Vendor exact production frontend
+
+# Hermetic vendoring: the committed chunk set at server/data/production-frontend/
+# is the canonical source of the immutable compiled bundle. This workflow
+# reconstructs the exact assets from those chunks alone — no network fetch, no
+# legacy origin — verifies the pinned SHA-256 checksums, and commits the
+# reconstructed bytes to public/assets when they drift.
+on:
+  push:
+    branches:
+      - ACRIS
+      - main
+      - claude/nyc-re-render-migration-rt5fs1
+    paths:
+      - '.github/workflows/vendor-exact-frontend.yml'
+      - 'server/production-frontend.js'
+      - 'server/data/production-frontend/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: vendor-exact-production-frontend-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  vendor:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+
+      - name: Reconstruct exact immutable frontend assets from committed chunks
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/reconstruct-frontend.js
+
+      - name: Verify attached-export checksums
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo '4b49749f5700e03bb55eb01e98ff1c3605b80c27b019fbf3c3c7afb9815f93f8  public/assets/index-BbnE3o5g.js' | sha256sum -c -
+          echo 'd883de91b793c684327840819408a1c827e3f9ef6211d9adbaf41bbbbe55124b  public/assets/index-shmfCHKD.css' | sha256sum -c -
+
+      - name: Commit exact assets to repository
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f public/assets/index-BbnE3o5g.js public/assets/index-shmfCHKD.css
+          if git diff --cached --quiet; then
+            echo 'Exact production assets already vendored.'
+            exit 0
+          fi
+          git commit -m 'Vendor exact production frontend assets reconstructed from committed chunks'
+          git push origin HEAD:${GITHUB_REF_NAME}

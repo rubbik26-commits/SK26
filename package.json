@@ -1,0 +1,54 @@
+{
+  "name": "nyc-re-market-intel",
+  "version": "2.0.0",
+  "private": true,
+  "description": "NYC RE Market Intel — exact production frontend with live NYC public-record intelligence.",
+  "type": "module",
+  "main": "server.js",
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "postinstall": "node scripts/vendor-production-frontend.js",
+    "start": "node server.js",
+    "dev": "node server.js",
+    "vendor": "node scripts/vendor.js && node scripts/vendor-production-frontend.js",
+    "vendor:production": "node scripts/vendor-production-frontend.js",
+    "reconstruct": "node scripts/reconstruct-frontend.js",
+    "db:setup": "node scripts/db-setup.js",
+    "chunks": "node scripts/make-frontend-chunks.js",
+    "ingest": "node scripts/ingest/run-all.js",
+    "ingest:mappluto": "node scripts/ingest/mappluto.js",
+    "ingest:nta": "node scripts/ingest/nta.js",
+    "ingest:acris": "node scripts/ingest/acris.js",
+    "ingest:dob": "node scripts/ingest/dob.js",
+    "ingest:violations": "node scripts/ingest/violations.js",
+    "ingest:tax": "node scripts/ingest/tax.js",
+    "test": "node scripts/run-unit-tests.mjs tests/*.test.mjs",
+    "test:browser": "node scripts/run-browser-tests.mjs",
+    "test:release-gate": "node tests/browser/release-gate.cjs",
+    "test:matrix": "node tests/browser/phase14-matrix.cjs",
+    "test:production": "node tests/browser/production-verify.cjs",
+    "db:migrate": "node scripts/apply-migrations.mjs",
+    "db:verify": "node scripts/verify-production-schema.mjs",
+    "pg:local": "node scripts/pglite-server.mjs",
+    "test:underwriting": "node tests/browser/underwriting.cjs",
+    "test:viewports": "node tests/browser/viewport-sweep.cjs"
+  },
+  "dependencies": {
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "leaflet": "1.9.4",
+    "leaflet-rotate": "^0.2.8",
+    "maplibre-gl": "^4.7.1",
+    "pdfjs-dist": "^6.2.108",
+    "pg": "^8.23.0",
+    "tesseract.js": "^7.0.0"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.5.5",
+    "@electric-sql/pglite-socket": "^0.2.8",
+    "playwright": "^1.56.1"
+  }
+}

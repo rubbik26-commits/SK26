@@ -1,0 +1,18 @@
+{
+  "generatedFrom": "exact vendored assets",
+  "partChars": 20000,
+  "assets": {
+    "index-BbnE3o5g.js": {
+      "sha256": "4b49749f5700e03bb55eb01e98ff1c3605b80c27b019fbf3c3c7afb9815f93f8",
+      "bytes": 1755647,
+      "encodedChars": 550348,
+      "parts": 28
+    },
+    "index-shmfCHKD.css": {
+      "sha256": "d883de91b793c684327840819408a1c827e3f9ef6211d9adbaf41bbbbe55124b",
+      "bytes": 123286,
+      "encodedChars": 26736,
+      "parts": 2
+    }
+  }
+}

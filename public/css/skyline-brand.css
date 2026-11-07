@@ -1,0 +1,421 @@
+/* =============================================================================
+   SKYLINE PROPERTIES — VISUAL BRAND LAYER ONLY
+   =============================================================================
+
+   The original compiled application remains the product authority. This file
+   may change visual identity (brand colours, typefaces, logo artwork and visual
+   chrome) and nothing else. It must not change route visibility, layout,
+   dimensions, spacing, responsive behavior, overflow, hit areas, control
+   geometry, data geometry, ordering or application state.
+   ========================================================================== */
+
+@font-face {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/brand/fonts/montserrat-variable.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Archivo";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/brand/fonts/archivo-variable.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Playfair Display";
+  font-style: normal;
+  font-weight: 400 500;
+  font-display: swap;
+  src: url("/brand/fonts/playfair-variable.woff2") format("woff2");
+}
+
+:root {
+  --sky-navy: #0B1B2B;
+  --sky-blue: #2E86DE;
+  --sky-blue-deep: #1E6FB8;
+  --sky-gold: #C9A24B;
+  --sky-slate: #5E6F80;
+  --sky-paper: #F3F1EA;
+  --sky-white: #FFFFFF;
+  --sky-gradient-gold: linear-gradient(90deg, #B78A38 0%, #CEA731 50%, #A16E1B 100%);
+  --sky-gradient-metallic: linear-gradient(105deg, #BC913F 0%, #CFAD60 20%, #FAF2AF 44%, #C9A02F 62%, #A3701D 100%);
+  --sky-font-header: "Archivo", "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+  --background: 47 27% 94%;
+  --foreground: 210 59% 11%;
+  --border: 45 15% 82%;
+  --card: 0 0% 100%;
+  --card-foreground: 210 59% 11%;
+  --card-border: 45 15% 84%;
+  --sidebar: 210 62% 9%;
+  --sidebar-foreground: 45 18% 92%;
+  --sidebar-border: 209 32% 20%;
+  --sidebar-primary: 41 54% 54%;
+  --sidebar-primary-foreground: 210 59% 11%;
+  --sidebar-accent: 210 40% 17%;
+  --sidebar-accent-foreground: 45 25% 95%;
+  --sidebar-ring: 41 54% 54%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 210 59% 11%;
+  --popover-border: 45 15% 82%;
+  --primary: 208 72% 42%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 45 20% 90%;
+  --secondary-foreground: 210 59% 14%;
+  --muted: 45 20% 91%;
+  --muted-foreground: 210 15% 38%;
+  --accent: 210 45% 90%;
+  --accent-foreground: 208 60% 26%;
+  --destructive: 356 62% 44%;
+  --destructive-foreground: 0 0% 100%;
+  --input: 45 14% 76%;
+  --ring: 41 54% 54%;
+  --chart-1: 208 72% 42%;
+  --chart-2: 41 54% 54%;
+  --chart-3: 204 33% 51%;
+  --chart-4: 210 15% 44%;
+  --chart-5: 214 27% 70%;
+  --font-sans: "Montserrat", "Helvetica Neue", Helvetica, Arial, system-ui, -apple-system, sans-serif;
+  --font-serif: "Playfair Display", Canela, Georgia, "Times New Roman", serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.dark {
+  --background: 210 59% 11%;
+  --foreground: 45 25% 95%;
+  --border: 209 30% 26%;
+  --card: 210 42% 15%;
+  --card-foreground: 45 25% 95%;
+  --card-border: 209 30% 28%;
+  --sidebar: 210 62% 9%;
+  --sidebar-foreground: 45 18% 92%;
+  --sidebar-border: 209 32% 20%;
+  --sidebar-primary: 41 54% 54%;
+  --sidebar-primary-foreground: 210 59% 11%;
+  --sidebar-accent: 210 40% 17%;
+  --sidebar-accent-foreground: 45 25% 95%;
+  --sidebar-ring: 41 54% 54%;
+  --popover: 210 44% 14%;
+  --popover-foreground: 45 25% 95%;
+  --popover-border: 209 30% 28%;
+  --primary: 208 72% 42%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 210 38% 19%;
+  --secondary-foreground: 45 25% 95%;
+  --muted: 210 36% 18%;
+  --muted-foreground: 208 18% 72%;
+  --accent: 208 48% 22%;
+  --accent-foreground: 205 55% 88%;
+  --destructive: 356 62% 50%;
+  --destructive-foreground: 0 0% 100%;
+  --input: 209 30% 44%;
+  --ring: 41 54% 54%;
+  --chart-1: 210 80% 62%;
+  --chart-2: 41 54% 54%;
+  --chart-3: 204 33% 62%;
+  --chart-4: 208 18% 66%;
+  --chart-5: 214 30% 78%;
+}
+
+html.skyline {
+  color-scheme: dark;
+  background: var(--sky-navy);
+}
+
+html.skyline body {
+  background: hsl(var(--background));
+  font-family: var(--font-sans);
+  color: hsl(var(--foreground));
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html.skyline h1,
+html.skyline h2,
+html.skyline h3,
+html.skyline h4 {
+  font-family: var(--sky-font-header);
+}
+
+html.skyline .font-mono,
+html.skyline [class*="font-mono"] {
+  font-family: var(--font-mono);
+}
+
+::selection {
+  background: rgba(201, 162, 75, .30);
+  color: hsl(var(--foreground));
+}
+
+/* Replace only the painted legacy mark. The existing SVG keeps its original
+   box, dimensions and location; its vector children are made transparent rather
+   than removed from layout. */
+html.skyline aside > div[class*="h-14"]:first-child > svg,
+html.skyline svg[aria-label*="logo" i],
+html.skyline header[class*="min-h-14"] > svg:first-child {
+  background-image: url("/brand/skyline-mark.png");
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  background-size: contain;
+  color: transparent;
+}
+html.skyline aside > div[class*="h-14"]:first-child > svg > *,
+html.skyline svg[aria-label*="logo" i] > *,
+html.skyline header[class*="min-h-14"] > svg:first-child > * {
+  opacity: 0;
+}
+
+/* Brand chrome — colour only. */
+html.skyline aside,
+html.skyline aside[class*="md:flex"],
+html.skyline nav[class*="md:hidden"] {
+  background-color: hsl(var(--sidebar));
+  color: hsl(var(--sidebar-foreground));
+}
+
+html.skyline aside nav a:hover {
+  background-color: hsl(var(--sidebar-accent));
+  color: hsl(var(--sidebar-accent-foreground));
+}
+
+html.skyline aside nav a[class*="bg-sidebar-primary"],
+html.skyline aside nav a[class*="bg-primary"] {
+  background: var(--sky-gradient-metallic) !important;
+  color: var(--sky-navy) !important;
+}
+html.skyline aside nav a[class*="bg-sidebar-primary"] svg,
+html.skyline aside nav a[class*="bg-primary"] svg {
+  color: var(--sky-navy) !important;
+}
+
+html.skyline nav[class*="md:hidden"] a a[class*="text-primary"] {
+  color: var(--sky-gold) !important;
+  background-color: rgba(201, 162, 75, .12);
+}
+html.skyline nav[class*="md:hidden"] a a[class*="text-primary"] svg {
+  color: var(--sky-gold) !important;
+}
+
+html.skyline input:not([type="range"]):not([type="checkbox"]):not([type="radio"]),
+html.skyline select,
+html.skyline textarea {
+  background-color: hsl(210 45% 12%);
+  border-color: hsl(var(--input));
+  color: hsl(var(--foreground));
+  font-family: var(--font-sans);
+}
+html.skyline input::placeholder,
+html.skyline textarea::placeholder {
+  color: hsl(208 16% 58%);
+}
+html.skyline select { color-scheme: dark; }
+
+html.skyline input:focus-visible,
+html.skyline select:focus-visible,
+html.skyline textarea:focus-visible,
+html.skyline button:focus-visible,
+html.skyline a:focus-visible,
+html.skyline [tabindex]:focus-visible {
+  outline-color: var(--sky-gold);
+}
+
+html.skyline input[type="range"],
+html.skyline input[type="checkbox"],
+html.skyline input[type="radio"] {
+  accent-color: var(--sky-gold);
+}
+
+html.skyline .text-primary { color: hsl(210 80% 62%); }
+html.skyline .text-destructive { color: hsl(356 80% 68%); }
+html.skyline .bg-white { background-color: hsl(var(--card)); }
+html.skyline .bg-gray-50,
+html.skyline .bg-slate-100 { background-color: hsl(var(--muted)); }
+html.skyline .text-gray-900 { color: hsl(var(--foreground)); }
+html.skyline .text-gray-600 { color: hsl(var(--muted-foreground)); }
+
+html.skyline .bg-amber-50,
+html.skyline .bg-yellow-50 { background-color: rgba(201, 162, 75, .13); }
+html.skyline .bg-amber-100 { background-color: rgba(201, 162, 75, .20); }
+html.skyline .text-amber-600,
+html.skyline .text-amber-700,
+html.skyline .text-amber-800,
+html.skyline .text-amber-900,
+html.skyline .text-yellow-700 { color: hsl(41 70% 66%); }
+html.skyline .bg-red-50,
+html.skyline .bg-red-100 { background-color: rgba(208, 57, 67, .14); }
+html.skyline .text-red-500,
+html.skyline .text-red-600,
+html.skyline .text-red-700,
+html.skyline .text-red-800 { color: hsl(356 80% 70%); }
+html.skyline .bg-emerald-50,
+html.skyline .bg-green-100 { background-color: rgba(63, 166, 118, .14); }
+html.skyline .text-emerald-600,
+html.skyline .text-emerald-700,
+html.skyline .text-green-700 { color: hsl(152 50% 60%); }
+
+/* Charts: repaint only presentation attributes; do not alter axes, clipping,
+   label size or chart geometry. */
+html.skyline .recharts-cartesian-grid line,
+html.skyline .recharts-cartesian-grid-horizontal line,
+html.skyline .recharts-cartesian-grid-vertical line {
+  stroke: rgba(243, 241, 234, .085);
+}
+html.skyline .recharts-cartesian-axis-line,
+html.skyline .recharts-cartesian-axis-tick-line {
+  stroke: rgba(243, 241, 234, .22);
+}
+html.skyline .recharts-text,
+html.skyline .recharts-cartesian-axis-tick text {
+  fill: hsl(var(--muted-foreground));
+  font-family: var(--font-sans);
+}
+html.skyline .recharts-legend-item-text {
+  color: hsl(var(--muted-foreground)) !important;
+}
+html.skyline .recharts-tooltip-wrapper .recharts-default-tooltip {
+  background: hsl(var(--popover)) !important;
+  border-color: hsl(var(--popover-border)) !important;
+  color: hsl(var(--popover-foreground)) !important;
+}
+html.skyline .recharts-reference-line line {
+  stroke: rgba(201, 162, 75, .55);
+}
+
+html.skyline thead th {
+  font-family: var(--font-sans);
+  color: rgba(201, 162, 75, .88);
+}
+
+/* Map chrome only. Raster/vector data and control geometry stay original. */
+html.skyline .leaflet-container { font-family: var(--font-sans); }
+html.skyline .map-reset-control,
+html.skyline .leaflet-bar,
+html.skyline .leaflet-bar a,
+html.skyline .map-nta-chip {
+  background-color: rgba(11, 27, 43, .92) !important;
+  color: var(--sky-paper) !important;
+  border-color: rgba(201, 162, 75, .42) !important;
+}
+html.skyline .map-reset-control:hover,
+html.skyline .leaflet-bar a:hover {
+  background-color: rgba(21, 45, 68, .96) !important;
+  color: var(--sky-white) !important;
+}
+html.skyline .map-nta-chip b { color: var(--sky-gold) !important; }
+html.skyline .lot-key {
+  background-color: rgba(11, 27, 43, .93);
+  border-color: rgba(201, 162, 75, .34);
+}
+html.skyline .lot-key-title,
+html.skyline .lot-key-of-label,
+html.skyline .lot-key-beta { color: var(--sky-gold); }
+html.skyline .lot-key-mode.is-on {
+  background-color: rgba(46, 134, 222, .18);
+  border-color: rgba(46, 134, 222, .55);
+  color: hsl(210 80% 72%);
+}
+html.skyline .lot-key-of-btn.is-on {
+  background-color: hsl(var(--primary));
+  border-color: hsl(var(--primary));
+  color: #fff;
+}
+html.skyline .leaflet-container .leaflet-control-attribution {
+  background-color: rgba(11, 27, 43, .78);
+  color: rgba(243, 241, 234, .70);
+  font-family: var(--font-sans);
+}
+html.skyline .leaflet-container .leaflet-control-attribution a {
+  color: rgba(201, 162, 75, .90);
+}
+html.skyline .leaflet-popup-content-wrapper,
+html.skyline .leaflet-popup-tip {
+  background-color: hsl(var(--popover));
+  color: hsl(var(--popover-foreground));
+}
+
+/* Preserve category/risk meanings while recolouring them into the approved
+   Skyline palette. Only colour properties are changed. */
+html.skyline [style*="color: rgb(29, 78, 216)"] { color: #7E9BEE !important; }
+html.skyline [style*="background: rgb(29, 78, 216)"],
+html.skyline [style*="background:#1D4ED8"] { background-color: #7E9BEE !important; }
+html.skyline [style*="color: rgb(37, 99, 235)"] { color: #8BACF4 !important; }
+html.skyline [style*="background: rgb(37, 99, 235)"],
+html.skyline [style*="background:#2563EB"] { background-color: #8BACF4 !important; }
+html.skyline [style*="color: rgb(14, 165, 233)"] { color: #54ACD4 !important; }
+html.skyline [style*="background: rgb(14, 165, 233)"],
+html.skyline [style*="background:#0EA5E9"] { background-color: #54ACD4 !important; }
+html.skyline [style*="color: rgb(124, 58, 237)"] { color: #A77BF3 !important; }
+html.skyline [style*="background: rgb(124, 58, 237)"],
+html.skyline [style*="background:#7C3AED"] { background-color: #A77BF3 !important; }
+html.skyline [style*="color: rgb(2, 132, 199)"] { color: #43A0D0 !important; }
+html.skyline [style*="background: rgb(2, 132, 199)"],
+html.skyline [style*="background:#0284C7"] { background-color: #43A0D0 !important; }
+html.skyline [style*="color: rgb(30, 64, 175)"] { color: #6F8BE6 !important; }
+html.skyline [style*="background: rgb(30, 64, 175)"],
+html.skyline [style*="background:#1E40AF"] { background-color: #6F8BE6 !important; }
+html.skyline [style*="color: rgb(8, 145, 178)"] { color: #30A5C1 !important; }
+html.skyline [style*="background: rgb(8, 145, 178)"],
+html.skyline [style*="background:#0891B2"] { background-color: #30A5C1 !important; }
+html.skyline [style*="color: rgb(190, 18, 60)"] { color: #EF577C !important; }
+html.skyline [style*="background: rgb(190, 18, 60)"],
+html.skyline [style*="background:#BE123C"] { background-color: #EF577C !important; }
+html.skyline [style*="color: rgb(100, 116, 139)"] { color: #8997AA !important; }
+html.skyline [style*="background: rgb(100, 116, 139)"],
+html.skyline [style*="background:#64748B"] { background-color: #8997AA !important; }
+
+/* Territory Mastery ships its own colour variables. Repoint only those visual
+   tokens and literal surfaces; its geometry/layout remains the bundle's. */
+html.skyline .tm {
+  --navy: #0B1B2B;
+  --navy-mid: hsl(210 42% 15%);
+  --ice: hsl(210 42% 15%);
+  --ice-dark: hsl(209 30% 26%);
+  --white: hsl(210 59% 11%);
+  --gold: #C9A24B;
+  --gold-light: hsl(41 62% 72%);
+  --text: hsl(45 25% 95%);
+  --text-muted: hsl(208 18% 72%);
+  --border: hsl(209 30% 26%);
+  --green: hsl(152 50% 58%);
+  --green-light: rgba(63, 166, 118, .16);
+  font-family: var(--font-sans);
+}
+html.skyline .tm .section h2,
+html.skyline .tm .masthead h1 { font-family: var(--sky-font-header); }
+html.skyline .tm .section h2,
+html.skyline .tm .stat-card .stat-val,
+html.skyline .tm .hook-script,
+html.skyline .tm .hist-toggle,
+html.skyline .tm .ppsf-val,
+html.skyline .tm .chip { color: hsl(var(--foreground)); }
+html.skyline .tm .owner-h,
+html.skyline .tm .asset-h,
+html.skyline .tm .hist-h { color: var(--sky-gold); }
+html.skyline .tm .search-input {
+  background-color: hsl(210 45% 12%);
+  border-color: hsl(var(--input));
+  color: hsl(var(--foreground));
+}
+html.skyline .tm .mode-toggle,
+html.skyline .tm .hook-body,
+html.skyline .tm .hist-panel,
+html.skyline .tm .cadence-day,
+html.skyline .tm .tm-modal { background-color: hsl(var(--card)); }
+html.skyline .tm .tm-overlay { background-color: rgba(6, 14, 23, .72); }
+html.skyline .tm .ppsf-fill { background-color: var(--sky-blue); }
+html.skyline .tm .refresh-btn { background-color: hsl(210 38% 19%); color: hsl(var(--foreground)); }
+html.skyline .tm .data-table th { background-color: hsl(210 38% 19%); color: rgba(201, 162, 75, .92); }
+html.skyline .tm .tm-modal-head { background-color: hsl(210 38% 19%); }
+html.skyline .tm .search-btn,
+html.skyline .tm .report-btn,
+html.skyline .tm .mode-btn.active,
+html.skyline .tm .hook-num { background-color: var(--sky-gold); color: var(--sky-navy); }
+
+@media print {
+  html.skyline { color-scheme: light; background: #fff; }
+  html.skyline body { background: #fff; color: #0B1B2B; }
+}

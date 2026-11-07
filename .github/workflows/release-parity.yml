@@ -1,0 +1,76 @@
+name: Release parity gate
+
+on:
+  push:
+    branches: [ACRIS, final-release-remediation-2026-08-18]
+  pull_request:
+    branches: [ACRIS]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-parity-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  unit-and-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.22.2
+          cache: npm
+      - name: Install dependencies
+        run: npm ci --include=dev
+      - name: Reconstruct exact production frontend
+        run: node scripts/reconstruct-frontend.js
+      - name: Run unit and contract tests
+        shell: bash
+        run: |
+          set -o pipefail
+          npm test 2>&1 | tee unit-and-contract.log
+      - name: Preserve unit test evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: unit-and-contract-${{ github.run_id }}
+          path: unit-and-contract.log
+          if-no-files-found: error
+          retention-days: 14
+
+  browser-parity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.22.2
+          cache: npm
+      - name: Install dependencies
+        run: npm ci --include=dev
+      - name: Reconstruct exact production frontend
+        run: node scripts/reconstruct-frontend.js
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Run all gating browser suites
+        shell: bash
+        run: |
+          set -o pipefail
+          npm run test:browser 2>&1 | tee browser-parity.log
+      - name: Preserve browser test evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-parity-${{ github.run_id }}
+          path: browser-parity.log
+          if-no-files-found: error
+          retention-days: 14

@@ -1,0 +1,206 @@
+# Render blueprint for the production deployment.
+services:
+  - type: web
+    name: lucia
+    runtime: node
+    # Sync the Blueprint already connected to this repository. Do not create a
+    # new Blueprint replica (Render appends a suffix and provisions a duplicate
+    # when you do that). Plan and region are intentionally omitted so whichever
+    # existing service the Blueprint is already bound to retains both settings.
+    # Install exactly from the lockfile, run the complete Owner-first unit /
+    # integration contract suite, reconstruct/verify immutable frontend bytes,
+    # apply every migration when a DB URI is available, then independently
+    # verify the required schema over PostgREST. A code-contract regression or
+    # partially migrated Supabase project cannot become the live deployment.
+    buildCommand: npm ci --include=dev && npm test && node scripts/reconstruct-frontend.js && node scripts/apply-migrations.mjs && node scripts/verify-production-schema.mjs
+    startCommand: node server.js
+    healthCheckPath: /healthz
+    envVars:
+      - key: NODE_VERSION
+        value: 22.22.2
+      - key: NODE_ENV
+        value: production
+      # Complete the full owner product first. `user` re-enables the existing
+      # member/owner split later without deleting or forking any functionality.
+      - key: APP_VARIANT
+        value: owner
+      # Production must never fall through to generated/demo property facts.
+      - key: ALLOW_SYNTHETIC_DEMO
+        value: "0"
+      # The production identity/workspace is Supabase. Disable the legacy local
+      # SQLite account store explicitly instead of merely relying on it being
+      # unmounted by NODE_ENV=production.
+      - key: DISABLE_LOCAL_SQLITE
+        value: "1"
+      - key: LOCAL_FIRST_USER_OWNER
+        value: "0"
+      # Legacy compatibility status paths default to Owner unless explicitly 0;
+      # pin the full Owner build rather than allowing a host default to drift.
+      - key: OWNER_MODE
+        value: "1"
+
+      - key: SITE_PASSWORD
+        sync: false
+      - key: OWNER_PASSWORD
+        sync: false
+
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_PUBLISHABLE_KEY
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      # Accepted aliases, read by production-api.js and durable-store.js. A
+      # legacy SERVICE_ROLE_KEY is accepted only when its JWT role is actually
+      # service_role; a stale anon JWT cannot outrank a valid sb_secret_ key.
+      - key: SUPABASE_SECRET_KEY
+        sync: false
+      - key: SUPABASE_ANON_KEY
+        sync: false
+      - key: APP_STATE_TOKEN
+        sync: false
+      # One-time only. Keep unset/0 normally. For a publishable-key-only state
+      # store: first open the bounded app_state bootstrap window with privileged
+      # SQL, set APP_STATE_BOOTSTRAP=1 for one deploy, verify /api/status reports
+      # supabase-rpc, then remove it immediately. The app never self-claims an
+      # unopened bootstrap window.
+      - key: APP_STATE_BOOTSTRAP
+        sync: false
+      - key: SUPABASE_DB_URL
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: OWNER_EMAIL
+        sync: false
+
+      # PostGIS is an acceleration/store layer, not permission to outrank fresh
+      # NYC public records. Leave POSTGIS_TRUSTED unset/0 until a complete ingest
+      # has been run and verified on the production project. The app then uses
+      # live NYC sources instead of a partial/stale warehouse.
+      - key: POSTGIS_TRUSTED
+        sync: false
+      - key: POSTGIS_ENABLED
+        sync: false
+      # Optional REST/API override only: this MUST be an https://<ref>.supabase.co
+      # API base URL. Never paste a postgresql:// pooler/direct connection string
+      # here; database URIs belong in SUPABASE_DB_URL. Runtime and ingest workers
+      # reject a DB URI here and safely fall back to SUPABASE_URL without logging
+      # the rejected value (which may contain a password).
+      - key: POSTGIS_SUPABASE_URL
+        sync: false
+      - key: POSTGIS_SUPABASE_KEY
+        sync: false
+
+      # Both spellings are accepted by every read site. The codebase historically
+      # used GOOGLE_MAPS_KEY while this blueprint declared GOOGLE_MAPS_API_KEY,
+      # so a deployment that set only the declared name left the imagery modules
+      # (Street View, static maps) reading an empty string while /api/status
+      # reported maps as configured. Setting either one is now sufficient;
+      # setting neither disables imagery honestly.
+      - key: GOOGLE_MAPS_API_KEY
+        sync: false
+      - key: GOOGLE_MAPS_KEY
+        sync: false
+      - key: GOOGLE_3D_KEY
+        sync: false
+      - key: GOOGLE_3D_DAILY_CAP
+        sync: false
+      # The exact Owner Dossier's inline marketing/listing card is a distinct
+      # Google Programmable Search integration. The immutable bundle names both
+      # variables explicitly. Do not replace it with the map popup's Serper
+      # integration; they are separate original product paths.
+      - key: GOOGLE_CSE_KEY
+        sync: false
+      - key: GOOGLE_CSE_CX
+        sync: false
+      - key: SERPER_API_KEY
+        sync: false
+      - key: PINECONE_API_KEY
+        sync: false
+      - key: PINECONE_INDEX_HOST
+        sync: false
+      # Airtable requires a current Personal Access Token (`pat...`) and a base
+      # id (`app...`). AIRTABLE_API_KEY remains an accepted legacy variable name
+      # for the PAT so existing deployments do not need an immediate rename.
+      - key: AIRTABLE_PAT
+        sync: false
+      - key: AIRTABLE_API_KEY
+        sync: false
+      - key: AIRTABLE_BASE_ID
+        sync: false
+      # Table and field names differ between Airtable bases. The CRM
+      # cross-reference searches these columns; leaving them unset uses the
+      # defaults (Sellers/Buyers, Name/Owner/Company/Address/BBL).
+      - key: AIRTABLE_SELLERS_TABLE
+        sync: false
+      - key: AIRTABLE_BUYERS_TABLE
+        sync: false
+      - key: AIRTABLE_MATCH_FIELDS
+        sync: false
+      - key: CENSUS_API_KEY
+        sync: false
+      - key: FRED_API_KEY
+        sync: false
+      # Both names are accepted by the tile proxy/status path. Keep the alias in
+      # the deployment contract so a token supplied under either historical name
+      # activates the exact Mapbox basemap rather than a fallback provider.
+      - key: MAPBOX_ACCESS_TOKEN
+        sync: false
+      - key: MAPBOX_TOKEN
+        sync: false
+      # Unauthenticated Socrata is rate-limited by IP, which shows up as
+      # intermittent 503s and empty lot grids under load. SOCRATA_APP_TOKEN is
+      # accepted as an alias by both adapters.
+      - key: NYC_OPEN_DATA_APP_TOKEN
+        sync: false
+      - key: SOCRATA_APP_TOKEN
+        sync: false
+      # Pin the tested memory budgets used by the live-data adapter and tile
+      # proxy. These are behavior-neutral cache controls, but leaving them as
+      # implicit host defaults defeats the Owner deployment-variable audit.
+      - key: SOCRATA_CACHE_DIR
+        value: server/data/cache
+      - key: SOCRATA_MEM_MAX_ROWS
+        value: "150000"
+      - key: SOCRATA_MEM_MAX_ENTRIES
+        value: "800"
+      - key: TILE_CACHE_MAX_BYTES
+        value: "67108864"
+      - key: SMTP_URL
+        sync: false
+      - key: APP_ORIGIN
+        sync: false
+
+  # This is a scheduled dispatcher, not another copy of the Lucia web service
+  # and not a second buyer database. It asks buyerDB's existing control plane to
+  # create auditable, de-duplicated sbi_source_runs in the shared Supabase
+  # project. It is deliberately disabled until the cutover checklist is signed
+  # off, so merely syncing this Blueprint cannot start duplicate ingestion.
+  - type: cron
+    name: lucia-buyerdb-refresh
+    runtime: node
+    plan: starter
+    region: virginia
+    schedule: "17 13 * * *"
+    buildCommand: npm ci --omit=dev
+    startCommand: node scripts/buyerdb-refresh-dispatch.mjs
+    envVars:
+      - key: NODE_VERSION
+        value: 22.22.2
+      - key: BUYERDB_REFRESH_ENABLED
+        value: "0"
+      - key: BUYERDB_CONTROL_PLANE_URL
+        value: https://buyerdb.netlify.app
+      - key: BUYERDB_REFRESH_JOB
+        value: full_refresh
+      - key: BUYERDB_REFRESH_OPTIONS
+        value: "{}"
+      # This is the sole new secret. It must equal SCRAPER_TRIGGER_SECRET on
+      # buyerDB's Netlify site. Do not copy any Supabase service key into this
+      # cron job; the control plane already owns its database credentials.
+      - key: BUYERDB_SCRAPER_TRIGGER_SECRET
+        sync: false
+
+# Lucia has no attached persistent disk. Production workspace state therefore
+# stays in the existing Supabase/Postgres project. The cron service has no disk
+# and performs no direct database writes.

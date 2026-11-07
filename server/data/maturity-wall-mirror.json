@@ -1,0 +1,456 @@
+{
+ "capturedAt": "2026-08-20",
+ "count": 95,
+ "loans": [
+  {
+   "borrower": "Harlem 133 Owner, Llc",
+   "address": "308 West 133rd Street",
+   "borough": "",
+   "lender": "Arena Sirec Lender I, Llc",
+   "balance": 4344044,
+   "ratePct": null,
+   "maturity": "2027-10-29"
+  },
+  {
+   "borrower": "Square Bricks Llc",
+   "address": "2013 Himrod Street",
+   "borough": "",
+   "lender": "Archwest Lending, Llc",
+   "balance": 995025,
+   "ratePct": null,
+   "maturity": "2027-10-29"
+  },
+  {
+   "borrower": "Diaz, Isaac",
+   "address": "2548 East 19 Street",
+   "borough": "",
+   "lender": "New American Funding Llc",
+   "balance": 480000,
+   "ratePct": null,
+   "maturity": "2027-10-29"
+  },
+  {
+   "borrower": "Beemer, Carol",
+   "address": "346 6 Avenue",
+   "borough": "",
+   "lender": "Homebridge Financial Services Inc",
+   "balance": 500000,
+   "ratePct": null,
+   "maturity": "2027-10-29"
+  },
+  {
+   "borrower": "Harlem 133 Owner, Llc",
+   "address": "308 West 133rd Street",
+   "borough": "",
+   "lender": "Arena Sirec Lender I, Llc",
+   "balance": 4344044,
+   "ratePct": null,
+   "maturity": "2027-10-29"
+  },
+  {
+   "borrower": "Okorom, Gertrude C",
+   "address": "257-17 145 Avenue",
+   "borough": "",
+   "lender": "Reliance First Capital Llc",
+   "balance": 550264,
+   "ratePct": null,
+   "maturity": "2027-10-29"
+  },
+  {
+   "borrower": "Binyan 36 Llc",
+   "address": "1336 45 Street",
+   "borough": "",
+   "lender": "J & J Capital Realty Associates Llc",
+   "balance": 450000,
+   "ratePct": null,
+   "maturity": "2027-10-29"
+  },
+  {
+   "borrower": "Binyan 36 Llc",
+   "address": "1336 45 Street",
+   "borough": "",
+   "lender": "J & J Capital Realty Associates Llc",
+   "balance": 450000,
+   "ratePct": null,
+   "maturity": "2027-10-29"
+  },
+  {
+   "borrower": "Bernardi, Nicolo",
+   "address": "1380 Greene Avenue",
+   "borough": "",
+   "lender": "Homebridge Financial Services, Inc.",
+   "balance": 1047000,
+   "ratePct": null,
+   "maturity": "2027-10-29"
+  },
+  {
+   "borrower": "E 46 Crown Corp.",
+   "address": "122 East 46 Street",
+   "borough": "",
+   "lender": "Manhattan Bridge Capital Inc.",
+   "balance": 607000,
+   "ratePct": null,
+   "maturity": "2027-10-29"
+  },
+  {
+   "borrower": "Binyan 36 Llc",
+   "address": "1336 45 Street",
+   "borough": "",
+   "lender": "J & J Capital Realty Associates Llc",
+   "balance": 450000,
+   "ratePct": null,
+   "maturity": "2027-10-29"
+  },
+  {
+   "borrower": "Trade Line Hillside Llc",
+   "address": "160-15 Hillside Avenue",
+   "borough": "",
+   "lender": "Washington Equity And Funding Corp",
+   "balance": 830000,
+   "ratePct": null,
+   "maturity": "2027-10-29"
+  },
+  {
+   "borrower": "Diaz, Isaac",
+   "address": "2548 East 19 Street",
+   "borough": "",
+   "lender": "New American Funding Llc",
+   "balance": 480000,
+   "ratePct": null,
+   "maturity": "2027-10-29"
+  },
+  {
+   "borrower": "Okorom, Gertrude C",
+   "address": "257-17 145 Avenue",
+   "borough": "",
+   "lender": "Reliance First Capital Llc",
+   "balance": 550264,
+   "ratePct": null,
+   "maturity": "2027-10-29"
+  },
+  {
+   "borrower": "1255 Bronx Llc",
+   "address": "1255 Fteley Avenue",
+   "borough": "",
+   "lender": "Bullpath Capital Corp.",
+   "balance": 800000,
+   "ratePct": null,
+   "maturity": "2027-10-29"
+  },
+  {
+   "borrower": "109 East 29th Llc",
+   "address": "515 East 12 Street",
+   "borough": "",
+   "lender": "Fcr Dc Jv Holdings Llc",
+   "balance": 2269025,
+   "ratePct": null,
+   "maturity": "2027-10-29"
+  },
+  {
+   "borrower": "1129 St Marks Llc",
+   "address": "1129 St Marks Avenue",
+   "borough": "",
+   "lender": "Broadview Capital Llc",
+   "balance": 1100000,
+   "ratePct": null,
+   "maturity": "2027-10-30"
+  },
+  {
+   "borrower": "A.S.K. Realty Corp.",
+   "address": "59-00 Beach Channel Drive",
+   "borough": "",
+   "lender": "Velocity Commercial Capital, Llc Dba New Day",
+   "balance": 1397500,
+   "ratePct": null,
+   "maturity": "2027-10-30"
+  },
+  {
+   "borrower": "A.S.K. Realty Corp.",
+   "address": "59-00 Beach Channel Drive",
+   "borough": "",
+   "lender": "Velocity Commercial Capital, Llc Dba New Day",
+   "balance": 1397500,
+   "ratePct": null,
+   "maturity": "2027-10-30"
+  },
+  {
+   "borrower": "A.S.K. Realty Corp.",
+   "address": "59-00 Beach Channel Drive",
+   "borough": "",
+   "lender": "Velocity Commercial Capital, Llc Dba New Day",
+   "balance": 1397500,
+   "ratePct": null,
+   "maturity": "2027-10-30"
+  },
+  {
+   "borrower": "Roli Group Llc",
+   "address": "188-11 Ilion Avenue",
+   "borough": "",
+   "lender": "Bayport Funding Llc",
+   "balance": 565000,
+   "ratePct": null,
+   "maturity": "2027-10-30"
+  },
+  {
+   "borrower": "Ohrt, Tyler",
+   "address": "780 West End Avenue",
+   "borough": "",
+   "lender": "Cliffco, Inc. Dba Cliffco Mortgage Bankers",
+   "balance": 784000,
+   "ratePct": null,
+   "maturity": "2031-04-29"
+  },
+  {
+   "borrower": "Supernatural Energy, Inc.",
+   "address": "124 Ryerson Street",
+   "borough": "",
+   "lender": "Mers",
+   "balance": 590000,
+   "ratePct": null,
+   "maturity": "2031-04-29"
+  },
+  {
+   "borrower": "Ireson, Jonathan",
+   "address": "76 Madison Avenue",
+   "borough": "",
+   "lender": "Hsbc Bank Usa, N.A.",
+   "balance": 1425000,
+   "ratePct": null,
+   "maturity": "2031-04-29"
+  },
+  {
+   "borrower": "Peluso, Anthony",
+   "address": "77-46 79th Street",
+   "borough": "",
+   "lender": "Mers",
+   "balance": 499000,
+   "ratePct": null,
+   "maturity": "2031-04-29"
+  },
+  {
+   "borrower": "Surette, Charles",
+   "address": "153 East 87th Street",
+   "borough": "",
+   "lender": "Mers",
+   "balance": 615000,
+   "ratePct": null,
+   "maturity": "2031-04-29"
+  },
+  {
+   "borrower": "Wu, Phillip",
+   "address": "42-31 161 Street",
+   "borough": "",
+   "lender": "Mers",
+   "balance": 730000,
+   "ratePct": null,
+   "maturity": "2031-04-29"
+  },
+  {
+   "borrower": "2502 Cambreleng Llc",
+   "address": "680 East Fordham Road",
+   "borough": "",
+   "lender": "Northeast Community Bank",
+   "balance": 3645000,
+   "ratePct": null,
+   "maturity": "2031-04-29"
+  },
+  {
+   "borrower": "Samuel, Zachary",
+   "address": "1474 Bushwick Avenue",
+   "borough": "",
+   "lender": "Mers",
+   "balance": 850000,
+   "ratePct": null,
+   "maturity": "2031-04-29"
+  },
+  {
+   "borrower": "Diamond 2626 Llc",
+   "address": "66-27 Fresh Pond Road",
+   "borough": "",
+   "lender": "Maspeth Federal Savings & Loan Association",
+   "balance": 505000,
+   "ratePct": null,
+   "maturity": "2031-04-29"
+  },
+  {
+   "borrower": "Kenia, Jenna Lillian",
+   "address": "93-10 70th Avenue",
+   "borough": "",
+   "lender": "Mers",
+   "balance": 1080000,
+   "ratePct": null,
+   "maturity": "2031-04-29"
+  },
+  {
+   "borrower": "Merritt, Todd Allen",
+   "address": "106 Decatur Street",
+   "borough": "",
+   "lender": "Mers",
+   "balance": 2120000,
+   "ratePct": null,
+   "maturity": "2031-04-29"
+  },
+  {
+   "borrower": "Margolin, Daniel E",
+   "address": "429 Kent Avenue",
+   "borough": "",
+   "lender": "Gr Affinity, Llc I/L/T /L/N Guaranteed Rate Affini",
+   "balance": 945000,
+   "ratePct": null,
+   "maturity": "2031-04-29"
+  },
+  {
+   "borrower": "Cocciolillo, Gina Marie",
+   "address": "1733 Hering Avenue",
+   "borough": "",
+   "lender": "Crosscountry Mortgage Llc",
+   "balance": 525350,
+   "ratePct": null,
+   "maturity": "2031-04-29"
+  },
+  {
+   "borrower": "Dudhraj, Ram Krishna",
+   "address": "40-48 97 Street",
+   "borough": "",
+   "lender": "Mers",
+   "balance": 450000,
+   "ratePct": null,
+   "maturity": "2031-04-29"
+  },
+  {
+   "borrower": "Cohen, Joseph",
+   "address": "1817 Madison Place",
+   "borough": "",
+   "lender": "Wells Fargo Bank, N.A.",
+   "balance": 645000,
+   "ratePct": null,
+   "maturity": "2031-04-29"
+  },
+  {
+   "borrower": "Lopez, Angel",
+   "address": "87-18 Union Turnpike",
+   "borough": "",
+   "lender": "Mers, Inc.",
+   "balance": 725000,
+   "ratePct": null,
+   "maturity": "2031-04-29"
+  },
+  {
+   "borrower": "Mott Haven Estates Llc",
+   "address": "419 East 135 Street",
+   "borough": "",
+   "lender": "Symetra Life Insurance Company",
+   "balance": 1069000,
+   "ratePct": null,
+   "maturity": "2031-04-29"
+  },
+  {
+   "borrower": "Ireson, Jonathan",
+   "address": "76 Madison Avenue",
+   "borough": "",
+   "lender": "Hsbc Bank Usa, N.A.",
+   "balance": 1425000,
+   "ratePct": null,
+   "maturity": "2031-04-29"
+  },
+  {
+   "borrower": "Diamond Holding L.L.C., A New York Limited",
+   "address": "255 Evergreen Avenue",
+   "borough": "",
+   "lender": "Jpmorgan Chase Bank, N.A.",
+   "balance": 668421,
+   "ratePct": null,
+   "maturity": "2031-04-29"
+  },
+  {
+   "borrower": "Gultekin, Deniz",
+   "address": "48 Stanhope Street",
+   "borough": "",
+   "lender": "U.S. Bank National Association",
+   "balance": 440000,
+   "ratePct": null,
+   "maturity": "2031-04-29"
+  },
+  {
+   "borrower": "1532 45th Street Llc",
+   "address": "1532 45th Street",
+   "borough": "",
+   "lender": "The Bank Of Princeton",
+   "balance": 1930000,
+   "ratePct": null,
+   "maturity": "2031-04-29"
+  },
+  {
+   "borrower": "Lin, Hui",
+   "address": "52-49 79th Street",
+   "borough": "",
+   "lender": "Mortgage Electronic Registration Systems, Inc",
+   "balance": 460000,
+   "ratePct": null,
+   "maturity": "2031-04-29"
+  },
+  {
+   "borrower": "2502 Cambreleng Llc",
+   "address": "680 East Fordham Road",
+   "borough": "",
+   "lender": "Northeast Community Bank",
+   "balance": 3645000,
+   "ratePct": null,
+   "maturity": "2031-04-29"
+  },
+  {
+   "borrower": "Bajnauth, Brian",
+   "address": "95-15 127 Street",
+   "borough": "",
+   "lender": "Mers",
+   "balance": 690757,
+   "ratePct": null,
+   "maturity": "2031-04-29"
+  },
+  {
+   "borrower": "Lei, Jianwei",
+   "address": "170 Bay 38th Street",
+   "borough": "",
+   "lender": "Mers",
+   "balance": 845000,
+   "ratePct": null,
+   "maturity": "2031-04-29"
+  },
+  {
+   "borrower": "Hasan, Md Najmul",
+   "address": "1107 Havemeyer Avenue",
+   "borough": "",
+   "lender": "Mortgage Electronic Registration Systems, Inc.",
+   "balance": 600000,
+   "ratePct": null,
+   "maturity": "2031-04-29"
+  },
+  {
+   "borrower": "Ouyang, Lichai",
+   "address": "103-48 106th Street",
+   "borough": "",
+   "lender": "Stg Mortgage Inc.",
+   "balance": 690000,
+   "ratePct": null,
+   "maturity": "2031-04-29"
+  },
+  {
+   "borrower": "Lopez, Angel",
+   "address": "87-18 Union Turnpike",
+   "borough": "",
+   "lender": "Mers, Inc.",
+   "balance": 725000,
+   "ratePct": null,
+   "maturity": "2031-04-29"
+  },
+  {
+   "borrower": "Diamond 2626 Llc",
+   "address": "66-27 Fresh Pond Road",
+   "borough": "",
+   "lender": "Maspeth Federal Savings & Loan Association",
+   "balance": 505000,
+   "ratePct": null,
+   "maturity": "2031-04-29"
+  }
+ ]
+}

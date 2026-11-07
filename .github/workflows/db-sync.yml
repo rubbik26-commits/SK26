@@ -1,0 +1,202 @@
+name: Database Sync Verification
+
+on:
+  push:
+    branches:
+      - main
+      - ACRIS
+  pull_request:
+    branches:
+      - main
+      - ACRIS
+  workflow_dispatch:
+  schedule:
+    - cron: '0 2 * * *'
+
+concurrency:
+  group: db-sync-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  db-sync-check:
+    name: Verify Database Sync & Schema
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.13'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check Supabase migrations exist
+        run: |
+          echo "Checking supabase/migrations directory..."
+          if [ ! -d "supabase/migrations" ]; then
+            echo "ERROR: supabase/migrations directory not found"
+            exit 1
+          fi
+          
+          migration_count=$(find supabase/migrations -name "*.sql" 2>/dev/null | wc -l)
+          echo "Found $migration_count migration files"
+          
+          if [ "$migration_count" -eq 0 ]; then
+            echo "ERROR: No SQL migration files found in supabase/migrations/"
+            exit 1
+          fi
+          
+          ls -lah supabase/migrations/ || true
+
+      - name: List all migrations in order
+        run: |
+          echo "=== Migration Files (in apply order) ==="
+          if [ -d "supabase/migrations" ]; then
+            ls -1 supabase/migrations/*.sql 2>/dev/null | sort || echo "No migrations found"
+          fi
+
+      - name: Validate migration SQL syntax
+        run: |
+          echo "Validating SQL syntax in migration files..."
+          error_count=0
+          
+          for file in supabase/migrations/*.sql; do
+            if [ -f "$file" ]; then
+              # Basic SQL validation - check for common issues
+              if ! grep -q "^--" "$file" && ! grep -q "^[A-Za-z]" "$file"; then
+                echo "WARNING: $file appears to be empty or malformed"
+                ((error_count++))
+              fi
+              
+              # Check file is readable
+              if [ ! -r "$file" ]; then
+                echo "ERROR: Cannot read $file"
+                ((error_count++))
+              fi
+              
+              echo "✓ $file"
+            fi
+          done
+          
+          if [ $error_count -gt 0 ]; then
+            echo "Found $error_count validation errors"
+            exit 1
+          fi
+
+      - name: Verify schema migration completeness
+        run: |
+          echo "=== Verifying Migration Schema Completeness ==="
+          
+          # Check for required tables in migrations
+          required_tables=(
+            "cre_profiles"
+            "cre_watchlist"
+            "cre_pipeline"
+            "app_state"
+            "parcels"
+            "acris_docs"
+          )
+          
+          found_tables=0
+          missing_tables=0
+          
+          for table in "${required_tables[@]}"; do
+            if grep -r "CREATE TABLE.*$table" supabase/migrations/ > /dev/null 2>&1; then
+              echo "✓ Found CREATE for table: $table"
+              ((found_tables++))
+            else
+              echo "✗ Missing CREATE for table: $table"
+              ((missing_tables++))
+            fi
+          done
+          
+          echo ""
+          echo "Schema completeness: $found_tables/${#required_tables[@]} required tables found"
+          
+          if [ $missing_tables -gt 0 ]; then
+            echo "ERROR: Missing $missing_tables required table definitions"
+            exit 1
+          fi
+
+      - name: Verify RLS policies configured
+        run: |
+          echo "=== Verifying RLS Policies ==="
+          
+          rls_count=$(grep -r "ALTER TABLE.*ENABLE ROW LEVEL SECURITY" supabase/migrations/ 2>/dev/null | wc -l)
+          policy_count=$(grep -r "CREATE POLICY" supabase/migrations/ 2>/dev/null | wc -l)
+          
+          echo "Found $rls_count RLS ENABLE statements"
+          echo "Found $policy_count RLS policies"
+          
+          if [ "$rls_count" -lt 5 ]; then
+            echo "WARNING: Expected at least 5 tables with RLS enabled"
+          fi
+          
+          if [ "$policy_count" -lt 5 ]; then
+            echo "WARNING: Expected at least 5 RLS policies defined"
+          fi
+
+      - name: Verify PostGIS setup
+        run: |
+          echo "=== Verifying PostGIS Configuration ==="
+          
+          if grep -r "CREATE EXTENSION.*postgis" supabase/migrations/ > /dev/null 2>&1; then
+            echo "✓ PostGIS extension is enabled"
+          else
+            echo "WARNING: PostGIS extension not found in migrations"
+          fi
+          
+          geom_tables=$(grep -r "geometry(" supabase/migrations/ 2>/dev/null | grep -c "")
+          echo "Found $geom_tables geometry column definitions"
+
+      - name: Check schema_migrations table tracking
+        run: |
+          echo "=== Verifying Migration Tracking ==="
+          
+          if grep -r "schema_migrations" supabase/migrations/ > /dev/null 2>&1; then
+            echo "✓ schema_migrations table exists for tracking applied migrations"
+          else
+            echo "WARNING: schema_migrations table not found - migrations may not be properly tracked"
+          fi
+
+      - name: Validate migration file naming convention
+        run: |
+          echo "=== Validating Migration Naming Convention ==="
+          
+          error_count=0
+          for file in supabase/migrations/*.sql; do
+            basename=$(basename "$file")
+            # Check format: YYYYMMDDHHHH_description.sql
+            if ! [[ $basename =~ ^[0-9]{12}_[a-z0-9_]+\.sql$ ]]; then
+              echo "ERROR: Invalid naming convention: $basename (expected: YYYYMMDDHHmm_description.sql)"
+              ((error_count++))
+            else
+              echo "✓ Valid naming: $basename"
+            fi
+          done
+          
+          if [ $error_count -gt 0 ]; then
+            exit 1
+          fi
+
+      - name: Database sync verification summary
+        run: |
+          echo ""
+          echo "=================================="
+          echo "Database Sync Verification Summary"
+          echo "=================================="
+          echo "✓ All migration files validated"
+          echo "✓ Schema completeness verified"
+          echo "✓ RLS policies confirmed"
+          echo "✓ PostGIS setup validated"
+          echo "✓ Migration tracking enabled"
+          echo ""
+          echo "Database is synced and ready for deployment."

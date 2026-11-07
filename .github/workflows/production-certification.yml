@@ -1,0 +1,98 @@
+name: Phase 20 production certification
+
+on:
+  workflow_dispatch:
+    inputs:
+      base_url:
+        description: Deployed service URL to certify
+        required: true
+        default: https://lucia-ru5s.onrender.com
+        type: string
+      certify:
+        description: Fail on BLOCKED as well as FAIL (use false for the pre-redeploy marker run, true after a real restart/redeploy)
+        required: true
+        default: false
+        type: boolean
+      required_integrations:
+        description: Comma-separated integrations that must be live for the full Owner product
+        required: true
+        default: "streetview,photorealistic3d,mapbox,pinecone,serper,airtable,demographics"
+        type: string
+      persistence_marker:
+        description: Marker created by the pre-redeploy run; supply it on the post-redeploy certification run
+        required: false
+        default: ""
+        type: string
+      previous_started_at:
+        description: /api/status startedAt captured before the real restart/redeploy
+        required: false
+        default: ""
+        type: string
+      previous_render_id:
+        description: rndr-id captured before the real restart/redeploy
+        required: false
+        default: ""
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: phase20-production-certification
+  cancel-in-progress: false
+
+jobs:
+  production-certification:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      # Secrets only. In APP_VARIANT=owner, SITE_PASSWORD itself is the owner
+      # credential and OWNER_PASSWORD is not required. The verifier reads the
+      # deployed appVariant from /api/status and requires OWNER_PASSWORD only
+      # when certifying the later reduced APP_VARIANT=user product.
+      SITE_PASSWORD: ${{ secrets.PRODUCTION_SITE_PASSWORD }}
+      OWNER_PASSWORD: ${{ secrets.PRODUCTION_OWNER_PASSWORD }}
+      P20_SUPABASE_ACCESS_TOKEN: ${{ secrets.P20_SUPABASE_ACCESS_TOKEN }}
+      P20_CERTIFY: ${{ inputs.certify && '1' || '0' }}
+      P20_REQUIRED_INTEGRATIONS: ${{ inputs.required_integrations }}
+      P20_PERSISTENCE_MARKER: ${{ inputs.persistence_marker }}
+      P20_PREVIOUS_STARTED_AT: ${{ inputs.previous_started_at }}
+      P20_PREVIOUS_RENDER_ID: ${{ inputs.previous_render_id }}
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+
+      - name: Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.22.2
+          cache: npm
+
+      - name: Refuse missing production site credential
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$SITE_PASSWORD" || { echo 'Missing GitHub secret PRODUCTION_SITE_PASSWORD'; exit 2; }
+
+      - name: Install dependencies
+        run: npm ci --include=dev
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run deployed-service Phase 20 verifier
+        shell: bash
+        run: |
+          set -o pipefail
+          node tests/browser/production-verify.cjs "${{ inputs.base_url }}" --md phase20-current.md 2>&1 | tee phase20-current.log
+
+      - name: Preserve Phase 20 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase20-${{ github.run_id }}
+          path: |
+            phase20-current.md
+            phase20-current.log
+          if-no-files-found: warn
+          retention-days: 30

@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en" class="dark skyline">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <!-- Installable home-screen / full-screen app (PWA-lite) -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Skyline Properties" />
+    <link rel="apple-touch-icon" href="/favicon.png" />
+    <meta name="theme-color" content="#0B1B2B" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <title>Skyline Properties — Manhattan’s Off-Market Investment Sales Authority</title>
+    <meta name="description" content="Skyline Properties — Manhattan’s off-market investment sales authority. A live virtual map room for NYC multifamily candidates, development sites, assemblages, underbuilt parcels, adaptive-reuse opportunities, and active construction across Manhattan, Brooklyn, and LIC/Queens." />
+
+    <!-- Hosting compatibility only. These preserve the original bundle's
+         behavior while retargeting its baked-in external services to the
+         configured production project and local vendor copies. -->
+    <script src="/js/supabase-env.js"></script>
+    <script src="/js/production-auth-bridge.js"></script>
+    <script src="/js/vendor-local.js"></script>
+    <script type="module" src="/js/pdf-local.js"></script>
+
+    <!-- Exact production application bytes from nycremarketintel-site 2.zip. -->
+    <script type="module" crossorigin src="./assets/index-BbnE3o5g.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-shmfCHKD.css">
+
+    <!-- Preserved Owner conveniences. These are intentionally separate from
+         branding: responsive/no-overlap/touch corrections, address resolution
+         for Deal Radar, and disclosure labels for modeled values. None changes
+         the pinned bundle's data formulas or API contracts. -->
+    <link rel="stylesheet" href="/css/mobile-parity.css">
+    <script src="/js/mobile-parity.js" defer></script>
+    <script src="/js/estimate-labels.js" defer></script>
+    <link rel="stylesheet" href="/css/buyer-intelligence.css?v=e1cb0ec22e8c">
+    <script src="/js/buyer-intelligence.js?v=e6b20e925021" defer></script>
+
+    <!-- Skyline branding remains visual/copy only. -->
+    <link rel="stylesheet" href="/css/skyline-brand.css">
+    <script src="/js/skyline-name.js" defer></script>
+
+    <link rel="manifest" href="/manifest.webmanifest">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" href="/icon-192.png">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>

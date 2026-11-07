@@ -1,0 +1,25 @@
+-- cre_pipeline.bbl must be writable on UPDATE, not only on INSERT.
+--
+-- WHY
+-- /api/maturity-wall selects the signed-in user's parcels with
+-- `cre_pipeline?select=bbl&bbl=not.is.null`, but the Kanban write path never
+-- populated bbl, so the column was null on every row and the wall queried an
+-- always-empty set. The server now derives the BBL from the opportunity id
+-- ("LIVE-" + the ten-digit BBL) and writes it.
+--
+-- New rows are fine: 202608130002 already grants bbl on INSERT. Rows that
+-- already exist have to be repaired the next time their stage moves, and the
+-- column-scoped UPDATE grant from 202608130001 — carried forward unchanged by
+-- 202608130002 — does not list bbl. Without this grant the backfill PATCH is
+-- rejected by PostgREST with a column-privilege error (42501), which means
+-- every kanban created before the fix would stay invisible to My Desk forever.
+--
+-- SAFETY
+-- This widens one column on one table for the `authenticated` role only.
+-- RLS still restricts every row to `user_id = auth.uid()` (policy
+-- cre_pipeline_own), so a user can set the BBL on their own pipeline rows and
+-- no one else's, and the table's own check constraint still requires
+-- `bbl ~ '^[0-9]{10}$'`. Nothing is revoked; the previous column list is
+-- restated verbatim with bbl added.
+grant update(bbl,address,owner_entity,stage,distress_score,propensity_score,assessed_value,last_sale,notes,metadata,opp_id,updated_at)
+  on public.cre_pipeline to authenticated;

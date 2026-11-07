@@ -1,0 +1,240 @@
+/* Preserved Owner usability corrections.
+
+   This layer is intentionally separate from Skyline branding. It improves
+   reachability, touch comfort and layout containment without changing data,
+   formulas, route semantics, persistence or API contracts.
+
+   The rules below were measured against the shipped application. They are kept
+   because removing them reintroduces controls or labels that are off-screen,
+   overlapping, clipped, undersized or difficult to operate.
+*/
+
+/* The document itself must never acquire a sideways scrollbar. Internal
+   application scrollers remain scrollable because this applies only to the
+   document root/body. */
+html.skyline,
+html.skyline body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Recharts gives the category axis a fixed width. The longest recovered
+   submarket names (for example VILLAGE-CENTRAL and FLUSHING-NORTH) were
+   measured clipping their first letter or colliding after wrapping from phone
+   through desktop widths. This only adjusts label paint; plotted data and chart
+   coordinates are untouched. */
+html.skyline .recharts-yAxis .recharts-cartesian-axis-tick text,
+html.skyline .recharts-cartesian-axis-tick text tspan {
+  font-size: 9px;
+  letter-spacing: -0.03em;
+}
+
+/* Several hyphenated submarket names are single unbreakable tokens and were
+   still clipped by the SVG viewport after the label-size correction. Let the
+   chart furniture paint into the card padding; the plotted bars/grid retain
+   Recharts' own clip paths. */
+html.skyline .recharts-surface,
+html.skyline .recharts-wrapper {
+  overflow: visible;
+}
+
+@media (max-width: 767px) {
+  /* ---- 1. Bottom tab bar: show every destination ---- */
+  nav[class*="md:hidden"][class*="overflow-x-auto"] {
+    flex-wrap: wrap;
+    overflow-x: hidden;
+    row-gap: 0;
+  }
+
+  /* The router wraps each styled link in a bare <a>, so the cell is the direct
+     child and everything that carries the visual styling sits inside it. */
+  nav[class*="md:hidden"][class*="overflow-x-auto"] > a {
+    flex: 0 0 16.6666%;
+    min-width: 0;
+    max-width: 16.6666%;
+  }
+
+  nav[class*="md:hidden"][class*="overflow-x-auto"] a a {
+    width: 100%;
+    min-width: 0;
+    padding: 3px 2px;
+    gap: 1px;
+  }
+
+  nav[class*="md:hidden"][class*="overflow-x-auto"] svg {
+    height: 1.05rem;
+    width: 1.05rem;
+  }
+
+  nav[class*="md:hidden"][class*="overflow-x-auto"] span {
+    display: block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 8.5px;
+    line-height: 1.2;
+    letter-spacing: -0.1px;
+    text-align: center;
+  }
+
+  /* ---- 1b. Keep the opportunity strip on screen ----
+     The map is sized h-[78vh]. On shorter phones the map plus the opportunity
+     strip and two-row tab bar otherwise exceeds the usable viewport and the
+     strip sits partly beneath the navigation. */
+  main [class*="h-[78vh]"] {
+    height: calc(100dvh - 166px);
+    min-height: 15rem;
+  }
+
+  /* ---- 2. Pipeline kanban: one column per screen, snapped ---- */
+  div[class*="overflow-x-auto"][class*="scroll-region"] > div[class*="min-w-max"] > div[class*="w-[244px]"] {
+    width: calc(100vw - 3.25rem);
+    max-width: 21rem;
+    scroll-snap-align: center;
+  }
+
+  div[class*="overflow-x-auto"][class*="scroll-region"]:has(> div[class*="min-w-max"] > div[class*="w-[244px]"]) {
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+  }
+
+  /* ---- 3. Header fit on phones ---- */
+  html.skyline header[class*="min-h-14"] {
+    padding-left: 12px;
+    padding-right: 12px;
+    gap: 10px;
+  }
+
+  html.skyline header[class*="min-h-14"] > svg:first-child {
+    width: 34px !important;
+    height: 34px !important;
+    flex: 0 0 34px;
+  }
+
+  html.skyline header[class*="min-h-14"] p {
+    font-size: 11.5px;
+    line-height: 1.28;
+  }
+
+  html.skyline header[class*="min-h-14"] p > span:first-child {
+    display: block;
+    font-size: 12px;
+  }
+
+  /* ---- 4. Touch targets ----
+     Previously measured controls ranged from 15px to 34px tall on a 390px
+     phone. A 40px height floor fixes the hit area without imposing a width
+     floor that would cause flex rows and Territory tabs to overlap. */
+  html.skyline button,
+  html.skyline [role="button"],
+  html.skyline main summary,
+  html.skyline a[class*="rounded"],
+  html.skyline a[class*="inline-flex"],
+  html.skyline a[class*="flex w-full"],
+  html.skyline .tm .chip,
+  html.skyline .tm .mode-btn,
+  html.skyline .tm .search-btn,
+  html.skyline .tm .report-btn,
+  html.skyline .tm .refresh-btn,
+  html.skyline .tm .hist-toggle,
+  html.skyline .tm button.drill-link {
+    min-height: 40px;
+  }
+
+  /* Only genuine compact pills are centred. Full-width/text-left card buttons
+     are deliberately excluded so their internal card layout is untouched. */
+  html.skyline main button[class*="rounded-full"]:not([class*="w-full"]):not([class*="text-left"]):not([class*="flex"]),
+  html.skyline .tm .chip,
+  html.skyline .tm .mode-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* The compact two-row tab bar has its own intentional height budget. */
+  html.skyline nav[class*="md:hidden"] button,
+  html.skyline nav[class*="md:hidden"] a {
+    min-height: 0;
+  }
+
+  html.skyline input[type="checkbox"],
+  html.skyline input[type="radio"] {
+    width: 20px;
+    height: 20px;
+  }
+
+  html.skyline main table a,
+  html.skyline .tm .data-table a {
+    display: inline-block;
+    padding-block: 9px;
+  }
+
+  html.skyline main button,
+  html.skyline main [role="button"],
+  html.skyline main a[class*="rounded"] {
+    touch-action: manipulation;
+  }
+
+  /* iOS zooms focused form controls below 16px. Raising text to 16px also
+     increases intrinsic input width, so min-width:0 is paired with it to keep
+     adjacent controls inside 320-390px viewports. */
+  html.skyline main input:not([type="range"]),
+  html.skyline main select {
+    font-size: 16px;
+    min-height: 40px;
+    min-width: 0;
+  }
+
+  html.skyline main [class*="truncate"] {
+    min-width: 0;
+  }
+
+  /* Presentation cards use px-8 in the compiled app. At 390px that spends
+     64px on side padding and was measured squeezing the address/title column
+     to roughly 98px. Reduce only that phone padding; desktop geometry stays
+     exactly as shipped. */
+  html.skyline main [class*="px-8"] {
+    padding-left: 1.15rem;
+    padding-right: 1.15rem;
+  }
+
+  html.skyline main [class*="overflow-x-auto"] {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* The map's two bottom hint chips can overlap one another and attribution on
+     a phone when each retains the compiled 60vw cap. Keep both fully visible. */
+  html.skyline .map-nta-chip {
+    max-width: 46vw;
+    font-size: 9px;
+    line-height: 1.3;
+    padding: 4px 7px;
+    margin-bottom: 22px;
+  }
+
+  html.skyline .leaflet-touch .leaflet-bar a {
+    margin-bottom: 2px;
+  }
+}
+
+/* Tablet: the narrower rail gets the smaller mark that was already measured to
+   fit without crowding the adjacent wordmark. */
+@media (min-width: 768px) and (max-width: 1023px) {
+  html.skyline aside > div[class*="h-14"]:first-child > svg {
+    width: 30px !important;
+    height: 30px !important;
+    flex: 0 0 30px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.skyline *,
+  html.skyline *::before,
+  html.skyline *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
