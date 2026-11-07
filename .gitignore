@@ -3,4 +3,11 @@ node_modules/
 .env.*
 *.log
 app.db
+app.db-shm
+app.db-wal
 .DS_Store
+
+# Runtime state written by the server, not source. The account store, its WAL
+# sidecars and backups, the Socrata response cache, and the workspace JSON the
+# app rewrites on every save.
+server/data/
