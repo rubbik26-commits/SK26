@@ -171,6 +171,13 @@ services:
       - key: APP_ORIGIN
         sync: false
 
+      # Market Stadium. The captured application's proprietary headline feed is
+      # not public, so /api/market-news derives its briefs from the shipped
+      # ACS/PLUTO dataset by default. Set this to proxy a live feed instead; the
+      # route reports which source it used either way.
+      - key: MARKET_NEWS_FEED_URL
+        sync: false
+
   # This is a scheduled dispatcher, not another copy of the Lucia web service
   # and not a second buyer database. It asks buyerDB's existing control plane to
   # create auditable, de-duplicated sbi_source_runs in the shared Supabase

@@ -3,18 +3,12 @@
 // under the page's market content: the top-10 metro ranking, the
 // surface's currently selected geography (scores + key stats) and a
 // macro latest-values strip — all from /api/market/*. The page's own
-// news attachment is the B0 market-news layer; this section sits after
+// news attachment is the market-news layer; this section sits after
 // it when present.
 (() => {
   const LMS = window.LuciaMarketStadium;
+  if (!LMS || LMS.territory) return;
   const PANEL_CLASS = "lucia-ms-territory-panel";
-
-  const getJson = async (url) => {
-    const response = await fetch(url, { headers: { accept: "application/json" } });
-    const body = await response.json().catch(() => ({}));
-    if (!response.ok) throw new Error(body.message || body.error || `HTTP ${response.status}`);
-    return body;
-  };
 
   let observer = null;
   let scheduled = false;
@@ -37,7 +31,7 @@
   else { ensureObserver(); queueEnhance(); }
 
   function anchorSection(doc) {
-    const news = doc.querySelector(".lucia-market-news-panel");
+    const news = doc.querySelector(".lucia-market-news");
     if (news) return news;
     const heading = [...doc.querySelectorAll("h1,h2,h3")].find((h) => /know your market/i.test(h.textContent || ""));
     return heading ? heading.closest("section") || heading.parentElement : null;
@@ -62,9 +56,9 @@
       const level = LMS.state.level;
       const geoid = LMS.state.sel[level];
       const [top, payload, macro] = await Promise.all([
-        getJson("/api/market/records/city?sort=c&limit=10"),
-        getJson(`/api/market/record/${level}/${encodeURIComponent(geoid)}`),
-        getJson("/api/market/macro")
+        LMS.api.json("/api/market/records/cbsa?sort=c&limit=10"),
+        LMS.api.json(`/api/market/record/${level}/${encodeURIComponent(geoid)}`),
+        LMS.api.json("/api/market/macro")
       ]);
       if (!section.isConnected) return;
       body.replaceChildren();
@@ -79,10 +73,10 @@
       }
       selBox.append(
         tiles,
-        LMS.kv("Population", LMS.fmtInt(rec.raw?.pop)),
-        LMS.kv("Median HH income", LMS.fmtMoney(rec.raw?.median_hh_income)),
-        LMS.kv("Median home value", LMS.fmtMoney(rec.raw?.median_value)),
-        LMS.kv("Violent crimes per 1,000", LMS.fmtNum(rec.violent_per_1k, 2))
+        LMS.kv("Population", LMS.fmtInt(rec.dem023c1)),
+        LMS.kv("Median HH income", LMS.fmtMoney(rec.hcap001c1)),
+        LMS.kv("Median home value", LMS.fmtMoney(rec.hval001c1)),
+        LMS.kv("Median rent", LMS.fmtRent(rec.hou002c1))
       );
       body.appendChild(selBox);
 
@@ -91,16 +85,16 @@
       const rows = (top.results || []).map((r) => `<tr data-geoid="${LMS.esc(r.geoid)}"><td>${r.rank ?? ""}</td><td class="nm">${LMS.esc(r.name)}</td><td>${LMS.fmtScore(r.score_c)}</td><td>${r.tier_c != null ? "T" + r.tier_c : "—"}</td></tr>`).join("");
       const table = LMS.ui.table(["Rank", "Metro", "Current", "Tier"], rows);
       table.querySelectorAll("tbody tr").forEach((tr) => tr.addEventListener("click", () => {
-        LMS.state.level = "city";
-        LMS.state.sel.city = tr.dataset.geoid;
+        LMS.state.level = "cbsa";
+        LMS.state.sel.cbsa = tr.dataset.geoid;
         window.location.hash = "#/market-stadium";
       }));
       rankBox.appendChild(table);
       body.appendChild(rankBox);
 
       const macroBox = document.createElement("div");
-      const series = Object.entries(macro.series || {}).slice(0, 4);
-      macroBox.innerHTML = `<h3>Macro (FRED)</h3>` + series.map(([, s]) => `<div class="lucia-ms-kv"><span>${LMS.esc(s.label || "")}</span><b>${LMS.esc(LMS.ui.fmtByUnit(s.latest?.value, s.unit))}</b></div>`).join("");
+      const series = Object.values(macro.series || {}).slice(0, 4);
+      macroBox.innerHTML = `<h3>Macro (FRED)</h3>` + series.map((s) => `<div class="lucia-ms-kv"><span>${LMS.esc(s.label || "")}</span><b>${LMS.esc(LMS.ui.fmtByUnit(s.latest?.value, s.unit))}</b></div>`).join("");
       body.appendChild(macroBox);
     } catch (error) {
       if (!section.isConnected) return;
@@ -108,4 +102,6 @@
       console.warn("[market-stadium] territory attachment failed:", error);
     }
   }
+
+  LMS.territory = { enhance, queueEnhance };
 })();

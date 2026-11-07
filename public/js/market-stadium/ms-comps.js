@@ -6,17 +6,28 @@
 // /api/market-index contracts are untouched.
 (() => {
   const LMS = window.LuciaMarketStadium;
+  if (!LMS || LMS.comps) return;
   const PANEL_CLASS = "lucia-ms-comps-panel";
 
   // Building-class labels for the by-class split. Names are the NYC
   // PLUTO data dictionary's Appendix C building-class names (the
   // Department of Finance PTS classes the DOF rolling sales file
-  // carries), for the two apartment families that file contains.
-  // A code with no entry renders as the code itself — never as a
-  // placeholder — and the /api/market/sales entries are counts
-  // ({ code: n }); an object entry ({ count, avg_price }) is read
-  // the same way when one is ever served.
+  // carries). A code with no entry renders as the code itself — never
+  // as a placeholder.
   const CLASS_LABELS = {
+    A1: "One family dwellings: detached",
+    A2: "One family dwellings: semi-detached",
+    A3: "One family dwellings: attached",
+    A4: "One family dwellings: city residence",
+    A5: "One family dwellings: attached or semi-detached",
+    A6: "One family dwellings: summer cottages",
+    A7: "One family dwellings: mansion type",
+    A8: "One family dwellings: bungalow colonies",
+    A9: "One family dwellings: miscellaneous",
+    B1: "Two family dwellings: brick",
+    B2: "Two family dwellings: frame",
+    B3: "Two family dwellings: converted from one family",
+    B9: "Two family dwellings: miscellaneous",
     C0: "Walk-up apartments: three families",
     C1: "Walk-up apartments: over six families without stores",
     C2: "Walk-up apartments: five to six families",
@@ -37,12 +48,6 @@
     D7: "Elevator apartments: semi-fireproof, with stores",
     D8: "Elevator apartments: luxury type",
     D9: "Elevator apartments: miscellaneous"
-  };
-  const classSegment = ([code, entry]) => {
-    const label = CLASS_LABELS[code] || String(code);
-    const count = typeof entry === "number" ? entry : entry?.count;
-    const avg = typeof entry === "object" && entry !== null && Number.isFinite(entry.avg_price) ? ` (avg ${LMS.fmtMoneyShort(entry.avg_price)})` : "";
-    return `${code} ${label}: ${Number.isFinite(count) ? LMS.fmtInt(count) : "—"}${avg}`;
   };
 
   let observer = null;
@@ -74,9 +79,9 @@
     const section = document.createElement("section");
     section.className = `${PANEL_CLASS} lucia-market-stadium`;
     section.setAttribute("aria-label", "Market Stadium sales file strip");
-    const zip0 = LMS.state.sel.zip || "10028";
+    const zip0 = LMS.state.sel.zipcode || "10028";
     section.innerHTML = `<h2>Market Stadium — sales file</h2>
-      <p class="lucia-ms-sub">DOF Rolling Calendar Sales (NYC Open Data usep-8jbt) with the ACRIS partial-interest join, served by /api/market/sales — a separate file from this page's own market-report contract.</p>
+      <p class="lucia-ms-sub">DOF Rolling Calendar Sales with the ACRIS partial-interest join, served by /api/market/sales — a separate file from this page's own market-report contract.</p>
       <div class="lucia-ms-controls"><label>ZIP <input class="lucia-ms-input lucia-ms-comps-zip" value="${LMS.esc(zip0)}" size="6"></label><button type="button" class="lucia-ms-btn small lucia-ms-comps-go">Load sales</button></div>
       <div class="lucia-ms-comps-body"><p class="lucia-ms-loading">Loading sales…</p></div>`;
     const heading = main.querySelector("h1,h2");
@@ -93,14 +98,34 @@
         const data = await LMS.api.json(`/api/market/sales?zip=${encodeURIComponent(zip)}&limit=8`);
         if (!section.isConnected) return;
         body.replaceChildren();
-        const f = data.filtered || {};
-        body.appendChild(LMS.kv(`ZIP ${zip} — sales in file`, `${LMS.fmtInt(f.count)} · avg ${LMS.fmtMoneyShort(f.avg_price)}`));
-        if (f.by_class) {
-          body.appendChild(LMS.h("div", "lucia-ms-sub", Object.entries(f.by_class).map(classSegment).join(" · ")));
+
+        // The route answers the shipped file's own shape: { sales: [...] }.
+        const all = Array.isArray(data.sales) ? data.sales : [];
+        const rows = all.slice(0, 8);
+        const prices = all.map((r) => r.price).filter((v) => Number.isFinite(v));
+        const avg = prices.length ? prices.reduce((a, b) => a + b, 0) / prices.length : null;
+
+        body.appendChild(LMS.kv(`ZIP ${zip} — sales in file`, `${LMS.fmtInt(all.length)} · avg ${LMS.fmtMoneyShort(avg)}`));
+
+        const byClass = new Map();
+        for (const r of all) {
+          const code = r.class || "—";
+          byClass.set(code, (byClass.get(code) || 0) + 1);
         }
-        const rows = (data.results || []).map((r) => `<tr><td class="nm">${LMS.esc(r.address || "—")}${r.partial_interest ? ` <span class="chip warn">Partial interest · ${r.partial_interest_pct ?? "—"}%</span>` : ""}</td><td>${LMS.esc(r.sale_date || "—")}</td><td>${LMS.esc(r.bldg_class || "—")}</td><td>${LMS.fmtMoney(r.sale_price)}</td></tr>`).join("");
-        body.appendChild(LMS.ui.table(["Address", "Date", "Class", "Price"], rows));
-        body.appendChild(LMS.note(`Window ${data.all_cd_sales?.window?.[0] || ""} → ${data.all_cd_sales?.window?.[1] || ""} across the full file (${LMS.fmtInt(data.total)} sales). Full panel: the “Sales” panel of the Market Stadium surface.`));
+        if (byClass.size) {
+          const split = [...byClass.entries()]
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 6)
+            .map(([code, n]) => `${code} ${CLASS_LABELS[code] || code}: ${LMS.fmtInt(n)}`)
+            .join(" · ");
+          body.appendChild(LMS.h("div", "lucia-ms-sub", split));
+        }
+
+        const html = rows
+          .map((r) => `<tr><td class="nm">${LMS.esc(r.address || "—")}</td><td>${LMS.esc(r.date || "—")}</td><td>${LMS.esc(r.class || "—")}</td><td>${LMS.fmtMoney(r.price)}</td></tr>`)
+          .join("");
+        body.appendChild(LMS.ui.table(["Address", "Date", "Class", "Price"], html));
+        body.appendChild(LMS.note(`Showing ${rows.length} of ${LMS.fmtInt(all.length)} sales in the shipped file. Full panel: the “Sales” panel of the Market Stadium surface.`));
       } catch (error) {
         if (!section.isConnected) return;
         body.replaceChildren(LMS.errorBox("Market Stadium sales failed to load", error));
@@ -111,4 +136,6 @@
     input.addEventListener("keydown", (e) => { if (e.key === "Enter") void load(); });
     void load();
   }
+
+  LMS.comps = { enhance, queueEnhance };
 })();

@@ -1,0 +1,215 @@
+/* Market Stadium shell layer — scoped stylesheet.
+ *
+ * Every selector is scoped under .lucia-market-stadium so the layer cannot
+ * change lucia's own geometry, and the print rules live here rather than in an
+ * injected <style>. Colours come from lucia's own custom properties with a
+ * literal fallback, so the layer follows the host theme instead of pinning one.
+ */
+.lucia-market-stadium {
+  margin: 16px 0;
+  color: var(--foreground, #e2e8f0);
+  font-size: 12px;
+}
+.lucia-market-stadium h2 { margin: 0; font-size: 14px; font-weight: 750; }
+.lucia-market-stadium h3 { margin: 12px 0 6px; font-size: 12px; font-weight: 700; }
+.lucia-market-stadium p { margin: 2px 0 0; }
+
+.lucia-market-stadium .lucia-ms-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid color-mix(in srgb, var(--primary, #c9a24b) 34%, var(--border, #334155));
+  border-bottom: none;
+  border-radius: 10px 10px 0 0;
+  background: color-mix(in srgb, var(--card, #122235) 94%, transparent);
+}
+.lucia-market-stadium .lucia-ms-head p { color: var(--muted-foreground, #94a3b8); font-size: 10px; }
+.lucia-market-stadium .lucia-ms-source {
+  flex: none;
+  border: 1px solid color-mix(in srgb, var(--primary, #c9a24b) 45%, transparent);
+  border-radius: 999px;
+  padding: 3px 8px;
+  color: var(--primary, #c9a24b);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.lucia-market-stadium .lucia-ms-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border: 1px solid color-mix(in srgb, var(--primary, #c9a24b) 34%, var(--border, #334155));
+  border-top: none;
+  background: color-mix(in srgb, var(--card, #122235) 94%, transparent);
+}
+.lucia-market-stadium .lucia-ms-input {
+  min-height: 32px;
+  border: 1px solid var(--border, #334155);
+  border-radius: 6px;
+  padding: 4px 8px;
+  background: var(--background, #0b1b2b);
+  color: inherit;
+  font: inherit;
+  font-size: 11px;
+}
+.lucia-market-stadium .lucia-ms-btn {
+  min-height: 32px;
+  border: 1px solid color-mix(in srgb, var(--primary, #c9a24b) 55%, transparent);
+  border-radius: 6px;
+  padding: 4px 12px;
+  background: color-mix(in srgb, var(--primary, #c9a24b) 18%, transparent);
+  color: inherit;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 650;
+  cursor: pointer;
+}
+.lucia-market-stadium .lucia-ms-btn:hover { background: color-mix(in srgb, var(--primary, #c9a24b) 30%, transparent); }
+.lucia-market-stadium .lucia-ms-btn.small { padding: 3px 9px; font-size: 10px; }
+
+.lucia-market-stadium .lucia-ms-map {
+  height: 320px;
+  border: 1px solid color-mix(in srgb, var(--primary, #c9a24b) 34%, var(--border, #334155));
+  border-top: none;
+  background: #0b1b2b;
+}
+
+.lucia-market-stadium .lucia-ms-body {
+  padding: 12px 14px;
+  border: 1px solid color-mix(in srgb, var(--primary, #c9a24b) 34%, var(--border, #334155));
+  border-top: none;
+  border-radius: 0 0 10px 10px;
+  background: color-mix(in srgb, var(--card, #122235) 94%, transparent);
+}
+.lucia-market-stadium .lucia-ms-loading,
+.lucia-market-stadium .lucia-ms-sub,
+.lucia-market-stadium .lucia-ms-note {
+  color: var(--muted-foreground, #94a3b8);
+  font-size: 10px;
+}
+
+.lucia-market-stadium .lucia-ms-card {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border: 1px solid color-mix(in srgb, var(--border, #334155) 80%, transparent);
+  border-radius: 8px;
+}
+.lucia-market-stadium .lucia-ms-card:last-child { margin-bottom: 0; }
+.lucia-market-stadium .lucia-ms-cardhead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.lucia-market-stadium .lucia-ms-cardhead em { color: var(--muted-foreground, #94a3b8); font-size: 10px; font-style: normal; }
+.lucia-market-stadium .lucia-ms-badge {
+  border-radius: 5px;
+  padding: 2px 7px;
+  color: #0b1b2b;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.lucia-market-stadium .lucia-ms-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 8px;
+}
+.lucia-market-stadium .lucia-ms-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 7px 9px;
+  border: 1px solid color-mix(in srgb, var(--border, #334155) 70%, transparent);
+  border-radius: 6px;
+}
+.lucia-market-stadium .lucia-ms-tile span { color: var(--muted-foreground, #94a3b8); font-size: 9px; letter-spacing: .05em; text-transform: uppercase; }
+.lucia-market-stadium .lucia-ms-tile b { font-size: 13px; }
+.lucia-market-stadium .lucia-ms-tile em { color: var(--muted-foreground, #94a3b8); font-size: 9px; font-style: normal; }
+
+.lucia-market-stadium .lucia-ms-cats { margin-top: 10px; }
+.lucia-market-stadium .lucia-ms-cat {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 4px 10px;
+  padding: 4px 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--border, #334155) 55%, transparent);
+}
+.lucia-market-stadium .lucia-ms-cat:last-child { border-bottom: none; }
+.lucia-market-stadium .lucia-ms-cat span { font-size: 10.5px; }
+.lucia-market-stadium .lucia-ms-cat b { font-size: 11px; }
+.lucia-market-stadium .lucia-ms-cat i {
+  grid-column: 1 / -1;
+  display: block;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--muted-foreground, #94a3b8);
+}
+
+.lucia-market-stadium .lucia-ms-kv {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 5px 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--border, #334155) 55%, transparent);
+}
+.lucia-market-stadium .lucia-ms-kv:last-child { border-bottom: none; }
+.lucia-market-stadium .lucia-ms-kv span { color: var(--muted-foreground, #94a3b8); font-size: 10px; }
+.lucia-market-stadium .lucia-ms-kv b { font-size: 12px; }
+
+.lucia-market-stadium .lucia-ms-tablewrap { overflow-x: auto; }
+.lucia-market-stadium .lucia-ms-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+}
+.lucia-market-stadium .lucia-ms-table th {
+  padding: 5px 7px;
+  border-bottom: 1px solid var(--border, #334155);
+  color: var(--muted-foreground, #94a3b8);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-align: left;
+  text-transform: uppercase;
+}
+.lucia-market-stadium .lucia-ms-table td {
+  padding: 5px 7px;
+  border-bottom: 1px solid color-mix(in srgb, var(--border, #334155) 55%, transparent);
+}
+.lucia-market-stadium .lucia-ms-table td.nm { max-width: 320px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lucia-market-stadium .lucia-ms-table tbody tr { cursor: pointer; }
+.lucia-market-stadium .lucia-ms-table tbody tr:hover { background: color-mix(in srgb, var(--primary, #c9a24b) 10%, transparent); }
+
+.lucia-market-stadium .lucia-ms-error {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 9px 11px;
+  border: 1px solid #b91c1c;
+  border-radius: 6px;
+  background: color-mix(in srgb, #b91c1c 12%, transparent);
+  font-size: 11px;
+}
+.lucia-market-stadium .lucia-ms-error span { color: var(--muted-foreground, #94a3b8); font-size: 10px; }
+
+/* The Market Stadium rail entry inherits lucia's own rail styling; only the
+ * active-state reset is needed so the cloned template does not arrive marked
+ * as the current page. */
+[data-market-link] { text-decoration: none; }
+
+@media print {
+  .lucia-market-stadium .lucia-ms-controls,
+  .lucia-market-stadium .lucia-ms-map { display: none; }
+  .lucia-market-stadium .lucia-ms-body { border-radius: 10px; }
+  .lucia-market-stadium .lucia-ms-table tbody tr { cursor: default; }
+}

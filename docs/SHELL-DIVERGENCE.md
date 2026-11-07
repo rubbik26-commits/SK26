@@ -49,6 +49,43 @@ geometry or data behaviour. The query versions are derived from each file's
 SHA-256 content and force refreshed clients to load the matching Manhattan
 buyer/address implementation after a deploy.
 
+### `js/market-stadium/*` and `css/market-stadium.css`
+
+Mount the Market Stadium surface into lucia. The surface itself is a separate
+build served at `/market/`; this layer is the in-lucia integration, and it is
+the only part of the merge that touches the served shell.
+
+It adds one navigation entry to lucia's existing rail pointing at `/market/`,
+and attaches Market Stadium context to lucia's own pages: the market overview
+(level switcher, choropleth, score card, top-10 ranking) on `#/market-stadium`,
+the score model and FRED macro context, climate risk and market news on
+`#/territory`, the DOF rolling-sales strip on `#/comps`, and parcel context on
+`#/dossier`.
+
+Every value comes from `/api/market/*`, `/api/climate-risk` or
+`/api/market-news`. The layer reads only; it changes no lucia data, formula,
+persistence or API contract, and it renders into elements it created itself.
+The stylesheet is scoped under `.lucia-market-stadium` and carries the print
+rules, so no `<style>` is injected. The map uses the vendored MapLibre build at
+`/vendor/maplibre/maplibre-gl.js` — never a CDN.
+
+| File | What it does |
+| --- | --- |
+| `css/market-stadium.css?v=e0580a98b46e` | Scoped presentation for the layer. Every selector is under `.lucia-market-stadium`; colours follow lucia's own custom properties. |
+| `css/climate-risk.css` | Presentation for the climate-risk attachment. |
+| `css/market-news.css` | Presentation for the market-news attachment. |
+| `js/market-stadium/ms-api.js?v=66fa14ac5ec9` | Shared namespace, formatters, tier palette and the `/api/market/*` client. |
+| `js/market-stadium/ms-geocoder.js?v=c4cb00dc7bec` | Resolves a typed address through the server's Census proxy and selects the matched geography. |
+| `js/market-stadium/ms-map.js?v=227bbce46d7d` | Choropleth of the active level, using the vendored MapLibre build. |
+| `js/market-stadium/ms-panels.js?v=1f82c5ce120e` | Market overview: level switcher, map, score card, top-10 ranking. |
+| `js/market-stadium/ms-panels2.js?v=5e7047830b50` | Score model, category weights, FRED macro and substituted inputs. |
+| `js/market-stadium/ms-panels3.js?v=c8a34a3b94ca` | Climate risk and market news attachments on Territory Mastery. |
+| `js/market-stadium/ms-export.js?v=85e5b01db993` | Client-side CSV export of the active level's ranked rows. |
+| `js/market-stadium/ms-territory.js?v=84dcda54ab08` | Market context section on Territory Mastery. |
+| `js/market-stadium/ms-dossier.js?v=5055b1aa9649` | Parcel context on the Parcel Dossier. |
+| `js/market-stadium/ms-comps.js?v=0953e5a21c13` | DOF rolling-sales strip on Comps. |
+| `js/market-stadium/market-stadium.js?v=bcdc9abc5237` | Entry point: injects the rail entry and starts the attachments. |
+
 ## Functional — keeps existing behaviour working
 
 ### `js/vendor-local.js`, `js/pdf-local.js`

@@ -65,12 +65,28 @@ router.get("/api/market/pluto", (_req, res) => {
   }
 });
 
-router.get("/api/market/sales", (_req, res) => {
+// Recorded sales. The shipped file is { sales: [...] }; `zip` and `limit`
+// filter it without changing the response shape, so a caller that ignores the
+// params still gets the whole file.
+router.get("/api/market/sales", (req, res) => {
+  let file;
   try {
-    res.set("Cache-Control", "public, max-age=3600").json(readJson(path.join(DATA, "sales.json")));
+    file = readJson(path.join(DATA, "sales.json"));
   } catch (e) {
-    res.status(503).json({ error: "sales_unavailable", detail: String(e?.message ?? e) });
+    return res.status(503).json({ error: "sales_unavailable", detail: String(e?.message ?? e) });
   }
+  const all = Array.isArray(file) ? file : Array.isArray(file?.sales) ? file.sales : [];
+  const zip = String(req.query.zip ?? "").trim();
+  const filtered = zip ? all.filter((r) => String(r.zip ?? "") === zip) : all;
+  const limit = Number.parseInt(String(req.query.limit ?? ""), 10);
+  const rows = Number.isFinite(limit) && limit > 0 ? filtered.slice(0, limit) : filtered;
+
+  res.set("Cache-Control", "public, max-age=3600").json({
+    sales: rows,
+    total: all.length,
+    filtered: filtered.length,
+    zip: zip || null
+  });
 });
 
 // Address search. The Census geocoder sends no CORS header, so the browser
@@ -115,6 +131,167 @@ router.get("/api/market/geocode", async (req, res) => {
       detail: e?.name === "TimeoutError" ? "Census geocoder timed out" : String(e?.message ?? e)
     });
   }
+});
+
+// ---------------------------------------------------------------------------
+// Record / ranking / macro reads.
+//
+// The Market Stadium surface reads its dataset from its own static tree, but
+// the lucia shell layer (public/js/market-stadium/ms-territory.js) reads the
+// same dataset through this API. These three routes are the contract that
+// layer calls; without them the Territory Mastery attachment renders an error
+// box instead of market context.
+//
+// Scoring is the surface's own documented rule, not a new one:
+//   composite = weighted mean of the 11 category scores (meta.categoryWeights)
+//   tier      = 11 - ceil(score), clamped to 1..10   (theme/tokens.ts)
+// Category scores are the mean of their member factors' percentile scores
+// (sc_<code>), which the ETL already computed within each level.
+// ---------------------------------------------------------------------------
+
+const LEVEL_ALIASES = { city: "cbsa", metro: "cbsa", msa: "cbsa", zip: "zipcode", zcta: "zipcode" };
+const normalizeLevel = (raw) => {
+  const key = String(raw ?? "").toLowerCase();
+  return LEVEL_ALIASES[key] ?? key;
+};
+
+function placesFor(level) {
+  const rows = readJson(path.join(DATA, `places-${level}.json`));
+  return Array.isArray(rows) ? rows : [];
+}
+
+/** Weighted mean of the 11 category scores, using the dataset's own weights. */
+function compositeScore(place, weights) {
+  const cats = place?.cats;
+  if (!cats || typeof cats !== "object") return null;
+  let sum = 0;
+  let total = 0;
+  for (const [name, value] of Object.entries(cats)) {
+    if (typeof value !== "number" || !Number.isFinite(value)) continue;
+    const w = typeof weights?.[name] === "number" ? weights[name] : 1;
+    sum += value * w;
+    total += w;
+  }
+  return total > 0 ? sum / total : null;
+}
+
+/** tier = 11 - ceil(score), clamped 1..10 — the surface's own legend rule. */
+function tierFromScore(score) {
+  if (typeof score !== "number" || !Number.isFinite(score)) return null;
+  return Math.max(1, Math.min(10, 11 - Math.ceil(score)));
+}
+
+function metaWeights() {
+  try {
+    return readJson(path.join(DATA, "meta.json"))?.categoryWeights ?? null;
+  } catch {
+    return null;
+  }
+}
+
+/** One geography's record: raw factors, category scores, composite and tier. */
+router.get("/api/market/record/:level/:geoid", (req, res) => {
+  const level = normalizeLevel(req.params.level);
+  if (!LEVELS.has(level)) return res.status(404).json({ error: "unknown_level", level: req.params.level });
+  const geoid = String(req.params.geoid);
+  let rows;
+  try {
+    rows = placesFor(level);
+  } catch (e) {
+    return res.status(503).json({ error: "market_dataset_unavailable", level, detail: String(e?.message ?? e) });
+  }
+  const place = rows.find((r) => String(r.geoid) === geoid);
+  if (!place) return res.status(404).json({ error: "not_found", level, geoid });
+
+  const weights = metaWeights();
+  const score = compositeScore(place, weights);
+  res.set("Cache-Control", "public, max-age=3600").json({
+    level,
+    geoid: place.geoid,
+    record: place,
+    scores: { c: score, g: null, f: null },
+    tiers: { c: tierFromScore(score), g: null, f: null },
+    model: "weighted mean of category scores (meta.categoryWeights); tier = 11 - ceil(score)"
+  });
+});
+
+/** Ranked rows for a level. `sort` is a factor code, or `c` for the composite. */
+router.get("/api/market/records/:level", (req, res) => {
+  const level = normalizeLevel(req.params.level);
+  if (!LEVELS.has(level)) return res.status(404).json({ error: "unknown_level", level: req.params.level });
+  const sort = String(req.query.sort ?? "c");
+  const limit = Math.max(1, Math.min(500, Number.parseInt(String(req.query.limit ?? "50"), 10) || 50));
+  let rows;
+  try {
+    rows = placesFor(level);
+  } catch (e) {
+    return res.status(503).json({ error: "market_dataset_unavailable", level, detail: String(e?.message ?? e) });
+  }
+
+  const weights = metaWeights();
+  const key = sort === "c" ? "mscor001c1" : sort;
+  const scored = rows
+    .map((r) => {
+      const composite = typeof r.mscor001c1 === "number" ? r.mscor001c1 : compositeScore(r, weights);
+      return { r, composite };
+    })
+    .filter((x) => typeof x.r[key] === "number" || (key === "c" && typeof x.composite === "number"));
+
+  scored.sort((a, b) => {
+    const av = key === "c" ? a.composite : a.r[key];
+    const bv = key === "c" ? b.composite : b.r[key];
+    return (bv ?? -Infinity) - (av ?? -Infinity);
+  });
+
+  const results = scored.slice(0, limit).map(({ r, composite }, i) => ({
+    rank: i + 1,
+    geoid: r.geoid,
+    name: r.name,
+    state: r.state ?? null,
+    county: r.county ?? null,
+    score_c: composite,
+    tier_c: tierFromScore(composite),
+    value: key === "c" ? composite : r[key]
+  }));
+
+  res.set("Cache-Control", "public, max-age=3600").json({
+    level,
+    sort: key,
+    total: scored.length,
+    count: results.length,
+    results
+  });
+});
+
+/** Macro series (FRED), latest value first — the dataset's own meta.macro. */
+router.get("/api/market/macro", (_req, res) => {
+  let meta;
+  try {
+    meta = readJson(path.join(DATA, "meta.json"));
+  } catch (e) {
+    return res.status(503).json({ error: "market_dataset_unavailable", detail: String(e?.message ?? e) });
+  }
+  const series = {};
+  for (const s of Array.isArray(meta?.macro) ? meta.macro : []) {
+    const points = Array.isArray(s.points) ? s.points : [];
+    const latest = points.length ? points[points.length - 1] : null;
+    const prior = points.length > 1 ? points[points.length - 2] : null;
+    series[s.id] = {
+      id: s.id,
+      label: s.label,
+      unit: s.unit,
+      freq: s.freq,
+      latest,
+      prior,
+      change: latest && prior ? latest.value - prior.value : null,
+      points: points.length
+    };
+  }
+  res.set("Cache-Control", "public, max-age=3600").json({
+    source: meta?.source ?? null,
+    generated: meta?.generated ?? null,
+    series
+  });
 });
 
 // Posture card: what this deployment is actually serving, and which inputs are

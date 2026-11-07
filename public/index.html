@@ -44,6 +44,25 @@
     <link rel="stylesheet" href="/css/skyline-brand.css">
     <script src="/js/skyline-name.js" defer></script>
 
+    <!-- Market Stadium shell layer. Read-only context from /api/market/*,
+         /api/climate-risk and /api/market-news, rendered into elements this
+         layer creates itself. The pinned bundle is never edited. Each file is
+         loaded once with a ?v= pin equal to the first 12 hex of its SHA-256. -->
+    <link rel="stylesheet" href="/css/market-stadium.css?v=e0580a98b46e">
+    <link rel="stylesheet" href="/css/climate-risk.css">
+    <link rel="stylesheet" href="/css/market-news.css">
+    <script src="/js/market-stadium/ms-api.js?v=66fa14ac5ec9" defer></script>
+    <script src="/js/market-stadium/ms-geocoder.js?v=c4cb00dc7bec" defer></script>
+    <script src="/js/market-stadium/ms-map.js?v=227bbce46d7d" defer></script>
+    <script src="/js/market-stadium/ms-panels.js?v=1f82c5ce120e" defer></script>
+    <script src="/js/market-stadium/ms-panels2.js?v=5e7047830b50" defer></script>
+    <script src="/js/market-stadium/ms-panels3.js?v=c8a34a3b94ca" defer></script>
+    <script src="/js/market-stadium/ms-export.js?v=85e5b01db993" defer></script>
+    <script src="/js/market-stadium/ms-territory.js?v=84dcda54ab08" defer></script>
+    <script src="/js/market-stadium/ms-dossier.js?v=5055b1aa9649" defer></script>
+    <script src="/js/market-stadium/ms-comps.js?v=0953e5a21c13" defer></script>
+    <script src="/js/market-stadium/market-stadium.js?v=bcdc9abc5237" defer></script>
+
     <link rel="manifest" href="/manifest.webmanifest">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="icon" type="image/png" href="/icon-192.png">
