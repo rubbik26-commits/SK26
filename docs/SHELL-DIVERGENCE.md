@@ -71,7 +71,7 @@ rules, so no `<style>` is injected. The map uses the vendored MapLibre build at
 
 | File | What it does |
 | --- | --- |
-| `css/market-stadium.css?v=e0580a98b46e` | Scoped presentation for the layer. Every selector is under `.lucia-market-stadium`; colours follow lucia's own custom properties. |
+| `css/market-stadium.css?v=b2640a6cb8a1` | Scoped presentation for the layer. Every selector is under `.lucia-market-stadium`; colours follow lucia's own custom properties. |
 | `css/climate-risk.css` | Presentation for the climate-risk attachment. |
 | `css/market-news.css` | Presentation for the market-news attachment. |
 | `js/market-stadium/ms-api.js?v=66fa14ac5ec9` | Shared namespace, formatters, tier palette and the `/api/market/*` client. |
@@ -79,7 +79,7 @@ rules, so no `<style>` is injected. The map uses the vendored MapLibre build at
 | `js/market-stadium/ms-map.js?v=227bbce46d7d` | Choropleth of the active level, using the vendored MapLibre build. |
 | `js/market-stadium/ms-panels.js?v=1f82c5ce120e` | Market overview: level switcher, map, score card, top-10 ranking. |
 | `js/market-stadium/ms-panels2.js?v=5e7047830b50` | Score model, category weights, FRED macro and substituted inputs. |
-| `js/market-stadium/ms-panels3.js?v=c8a34a3b94ca` | Climate risk and market news attachments on Territory Mastery. |
+| `js/market-stadium/ms-panels3.js?v=223b16d10b2a` | Climate risk and market news attachments on Territory Mastery. |
 | `js/market-stadium/ms-export.js?v=85e5b01db993` | Client-side CSV export of the active level's ranked rows. |
 | `js/market-stadium/ms-territory.js?v=84dcda54ab08` | Market context section on Territory Mastery. |
 | `js/market-stadium/ms-dossier.js?v=5055b1aa9649` | Parcel context on the Parcel Dossier. |
